@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Build output
+dist/
+coverage/
+*.tsbuildinfo
+playwright-report/
+test-results/
+
+# Local environment
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+
+# Editor and tool state
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.cache/
+.vite/

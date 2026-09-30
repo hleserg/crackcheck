@@ -1,0 +1,69 @@
+# CrackCheck
+
+Repository: <https://github.com/hleserg/crackcheck>
+
+**Локальный, объяснимый анализ стойкости паролей.** CrackCheck помогает увидеть, какие знакомые слова и конструкции алгоритм подбора проверит раньше.
+
+> Пароль анализируется в браузере. Сетевая проверка известных утечек запускается отдельно и только по запросу.
+
+Проект находится в начальной разработке. В текущем исходном коде есть статическое приложение, анализ через `zxcvbn-ts`, русская и английская локализация интерфейса, режим Wi‑Fi / WPA2-Personal и отдельная проверка HIBP по кнопке. Публичный адрес приложения и готовый релиз пока не заявлены.
+
+## Сейчас в коде
+
+- статическое приложение на TypeScript и Vite без обязательного backend;
+- оценка на основе `zxcvbn-ts`, с объяснением распознанных шаблонов и числа догадок;
+- интерфейс на русском и английском;
+- образовательный режим для собственных Wi‑Fi паролей WPA2-Personal;
+- отдельная opt-in проверка Have I Been Pwned (HIBP).
+
+Для переводов и словарей используется официальный пакет `@zxcvbn-ts/language-ru@4.1.0`. Большие словари пакета представлены латинской транслитерацией: сами по себе они не распознают русские строки вроде `пароль` или `привет`. CrackCheck дополнительно проверяет транслитерированный кандидат для кириллических фрагментов и выбирает его только при обнаружении русского словарного совпадения с меньшей оценкой догадок. Это ограниченная app-level эвристика, а не отдельный upstream matcher. Имена и фамилии в пакете берутся из русских locale-файлов FakerJS (MIT), однако их ревизия в генераторе не закреплена, а списки не следует считать ранжированными по частоте. README пакета ошибочно ссылается на турецкие locale-файлы. Подробности — в [`docs/data-sources.md`](docs/data-sources.md).
+
+Граф JCUKEN в `src/russianGraph.json` сгенерирован по upstream-коммиту `zxcvbn-ts/zxcvbn` `d72e679` и интегрирован локально. Он не входит в опубликованный npm-пакет `language-ru`.
+
+## Конфиденциальность
+
+Основной анализ рассчитан на выполнение на устройстве после загрузки приложения. Он не требует отправки пароля на сервер CrackCheck. Вводимый пароль не должен сохраняться в постоянном хранилище браузера или попадать в URL.
+
+HIBP — отдельная сетевая функция: перед запуском интерфейс должен сообщить о запросе. Для Pwned Passwords используется k-anonymity: SHA-1 вычисляется локально, а сервису отправляются только первые пять шестнадцатеричных символов хеша. Сам пароль и полный хеш не отправляются. Подробности — в [модели конфиденциальности](docs/privacy.md) и [`SECURITY.md`](SECURITY.md).
+
+Это описание проектных требований, а не независимый аудит уже опубликованного сайта. Перед использованием на особо чувствительных данных изучите исходный код и собранные зависимости.
+
+## Локальная разработка
+
+Требуются Node.js и npm.
+
+```sh
+npm install
+npm run dev
+```
+
+Доступные команды:
+
+```sh
+npm run typecheck
+npm run lint
+npm test
+npm run build
+```
+
+Production-сборка сама по себе не означает, что сайт опубликован.
+
+## Принципы оценки
+
+CrackCheck не сводит стойкость к галочкам «цифра + заглавная буква + символ». Оценка зависит от распознаваемых шаблонов и словарей. Число догадок — модельная оценка, а не обещание времени взлома. Время можно интерпретировать только вместе с конкретной моделью атакующего, алгоритмом хранения пароля и доступными ему ресурсами.
+
+Wi‑Fi режим предназначен для оценки собственного пароля и объяснения сценария WPA2-Personal. Проект не захватывает сетевой трафик, не получает handshake и не автоматизирует атаки.
+
+## Лицензии
+
+Код CrackCheck распространяется по MIT, если файл [`LICENSE`](LICENSE) не указывает иное. Лицензии сторонних библиотек и наборов данных отдельны: MIT не распространяется автоматически на словари и иные данные. См. [`NOTICE.md`](NOTICE.md) и [`docs/data-sources.md`](docs/data-sources.md).
+
+## Участие
+
+Исправления, переводы и улучшения приветствуются. Перед отправкой изменений ознакомьтесь с [`CONTRIBUTING.md`](CONTRIBUTING.md). Для сообщения о проблеме безопасности используйте порядок из [`SECURITY.md`](SECURITY.md).
+
+## English
+
+CrackCheck is an early-stage, local-first password crackability explainer. The app is a static TypeScript/Vite frontend using `zxcvbn-ts`, with Russian and English UI, an educational WPA2-Personal mode, and an optional, explicitly triggered HIBP check. Repository: <https://github.com/hleserg/crackcheck>.
+
+The project does not claim a live deployment or complete Russian dictionary coverage. It uses the official `@zxcvbn-ts/language-ru@4.1.0` package for Russian translations and dictionaries; its major dictionaries are Latin transliterations and do not directly match raw Cyrillic words. CrackCheck has a limited app-level transliteration candidate check, not a dedicated upstream matcher. The upstream generator uses Russian FakerJS locale files (MIT) for first names and surnames, although the package README mistakenly links Turkish locale files; these lists are not population-ranked and the generator does not pin the Faker revision. CrackCheck's JCUKEN graph was generated from upstream commit `d72e679` and is integrated locally; it is not shipped in that npm package. HIBP requires a separate network request and uses the Pwned Passwords k-anonymity range protocol: only the first five hexadecimal characters of a locally computed SHA-1 hash are sent. See [privacy details](docs/privacy.md) and [data source status](docs/data-sources.md).

@@ -1,0 +1,73 @@
+import { expect, test } from '@playwright/test'
+
+test('password analysis stays local and leaves no browser storage or URL trace', async ({ page }) => {
+  await page.goto('/')
+  await page.waitForLoadState('networkidle')
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  const startingUrl = page.url()
+  const requestsAfterLoad: string[] = []
+  page.on('request', request => requestsAfterLoad.push(request.url()))
+
+  await page.locator('#password').fill('private-example-password-482!')
+  await expect(page.locator('#result')).toBeVisible()
+
+  expect(requestsAfterLoad).toEqual([])
+  expect(page.url()).toBe(startingUrl)
+  const browserData = await page.evaluate(async () => ({
+    local: Object.keys(localStorage),
+    session: Object.keys(sessionStorage),
+    cookies: document.cookie,
+    databases: (await indexedDB.databases()).map(database => database.name),
+    visibleText: document.body.innerText,
+  }))
+  expect(browserData).toMatchObject({ local: [], session: [], cookies: '', databases: [] })
+  expect(browserData.visibleText).not.toContain('private-example-password-482!')
+
+  await page.reload()
+  await expect(page.locator('#password')).toHaveValue('')
+})
+
+test('password controls remain keyboard accessible at a mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/')
+  const input = page.locator('#password')
+  await expect(input).toBeVisible()
+  await input.focus()
+  await page.keyboard.press('Tab')
+  await expect(page.locator('#show')).toBeFocused()
+  await page.keyboard.press('Enter')
+  await expect(input).toHaveAttribute('type', 'text')
+})
+
+test('HIBP sends a five-character hash prefix only after explicit opt-in', async ({ page }) => {
+  const externalRequests: Array<{ url: string; method: string; headers: Record<string, string>; body: string | null }> = []
+  await page.route('https://api.pwnedpasswords.com/**', async route => {
+    const request = route.request()
+    externalRequests.push({
+      url: request.url(),
+      method: request.method(),
+      headers: request.headers(),
+      body: request.postData(),
+    })
+    await route.fulfill({ status: 200, contentType: 'text/plain', body: 'DEADBEEF:1\r\n' })
+  })
+
+  await page.goto('/')
+  await page.locator('#password').fill('password')
+  await expect(page.locator('#result')).toBeVisible()
+  expect(externalRequests).toEqual([])
+
+  await expect(page.locator('#network-off')).toBeChecked()
+  await expect(page.getByRole('button', { name: /check with HIBP|проверить по HIBP/i })).toBeDisabled()
+  await page.locator('#network-off').uncheck()
+  await page.getByRole('button', { name: /check with HIBP|проверить по HIBP/i }).click()
+
+  await expect.poll(() => externalRequests.length).toBe(1)
+  expect(externalRequests[0]!.url).toBe('https://api.pwnedpasswords.com/range/5BAA6')
+  expect(externalRequests[0]!.method).toBe('GET')
+  expect(new URL(externalRequests[0]!.url).search).toBe('')
+  expect(externalRequests[0]!.body).toBeNull()
+  expect(externalRequests[0]!.headers.referer).toBeUndefined()
+  expect(externalRequests[0]!.url).not.toContain('1E4C9B93F3F0682250B6CF8331B7EE68FD8')
+  await expect(page.locator('#hibp-status')).toContainText(/no match|совпадений не найдено/i)
+})
