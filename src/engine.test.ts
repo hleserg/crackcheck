@@ -2,11 +2,18 @@ import { describe, expect, it } from 'vitest'
 import { ZxcvbnFactory } from '@zxcvbn-ts/core'
 import { adjacencyGraphs, dictionary as commonDictionary } from '@zxcvbn-ts/language-common'
 import { dictionary as englishDictionary, translations } from '@zxcvbn-ts/language-en'
+import { languageDictionary } from './dictionaries'
 import { analyze, transliterate } from './engine'
 import russianGraph from './russianGraph.json'
 
 const commonEnglishFactory = new ZxcvbnFactory({
   dictionary: { ...commonDictionary, ...englishDictionary },
+  graphs: { ...adjacencyGraphs, russian: russianGraph },
+  translations,
+})
+
+const fullFactory = new ZxcvbnFactory({
+  dictionary: { ...commonDictionary, ...languageDictionary },
   graphs: { ...adjacencyGraphs, russian: russianGraph },
   translations,
 })
@@ -34,6 +41,7 @@ describe('analyze', () => {
     { sample: 'пароль', detail: 'russianWord', transliterated: true },
     { sample: 'пароль123', detail: 'commonPassword', transliterated: true },
     { sample: 'Сергей1988', detail: 'name', transliterated: true },
+    { sample: 'анна2024', detail: 'name', transliterated: true },
     { sample: 'Иван', detail: 'name', transliterated: true },
     { sample: 'йцукен', detail: 'russianKeyboard', transliterated: false },
   ])('recognizes $sample as $detail', ({ sample, detail, transliterated }) => {
@@ -42,19 +50,31 @@ describe('analyze', () => {
     expect(result?.transliterated).toBe(transliterated)
     expect(result?.patterns.some(pattern => pattern.detail === detail)).toBe(true)
     if (transliterated) expect(result?.patterns.every(pattern => pattern.length === null)).toBe(true)
+    if (['пароль123', 'Сергей1988', 'анна2024'].includes(sample)) {
+      expect(result?.score).toBeLessThanOrEqual(2)
+    }
   })
 
-  it('uses the Russian dictionary where common and English dictionaries do not recognize the transliteration', () => {
+  it('keeps the official Russian package ranks when analyzing a Cyrillic word', () => {
     const sample = 'пароль'
     const englishOnly = commonEnglishFactory.check(transliterate(sample))
+    const fullModelTransliteration = fullFactory.check(transliterate(sample))
     const fullModel = analyze(sample)
 
     expect(fullModel?.transliterated).toBe(true)
     expect(fullModel?.guesses).toBeLessThan(englishOnly.guesses)
+    expect(fullModel?.guesses).toBe(fullModelTransliteration.guesses)
   })
 
   it('does not apply Russian transliteration to arbitrary mixed Cyrillic strings', () => {
     const result = analyze('Ж7щ%К9ж')
+
+    expect(result).not.toBeNull()
+    expect(result?.transliterated).toBe(false)
+  })
+
+  it('does not accept an arbitrary Cyrillic run just because its transliteration resembles Latin text', () => {
+    const result = analyze('фкщвлрж')
 
     expect(result).not.toBeNull()
     expect(result?.transliterated).toBe(false)

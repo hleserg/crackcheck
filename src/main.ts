@@ -19,7 +19,7 @@ app.innerHTML = `
       </section>
       <section class="hibp-section"><div><span class="section-kicker">OPT-IN · HIBP</span><h2 id="hibp-title"></h2><p id="hibp-text"></p></div><div class="hibp-actions"><label class="network-switch"><input id="network-off" type="checkbox" checked /><span id="network-off-label"></span></label><button class="primary-button" id="hibp-button" type="button"></button><p id="hibp-status" role="status" aria-live="polite"></p></div></section>
       <section class="learn"><span class="section-kicker">CRACKCHECK / 01</span><h2 id="learn-title"></h2><div class="learn-grid"><p id="learn1"></p><p id="learn2"></p><p id="learn3"></p></div></section>
-    </main><footer><span>CrackCheck · MIT</span><nav><a id="privacy-link" href="https://github.com/hleserg/crackcheck/blob/main/docs/privacy.md"></a><a id="methodology-link" href="https://github.com/hleserg/crackcheck/blob/main/docs/methodology.md"></a></nav></footer>
+    </main><footer><span>CrackCheck · MIT</span><nav><a id="privacy-link" href="https://github.com/hleserg/crackcheck/blob/main/docs/privacy.md"></a><a id="methodology-link" href="https://github.com/hleserg/crackcheck/blob/main/docs/methodology.md"></a><a id="data-link" href="https://github.com/hleserg/crackcheck/blob/main/THIRD_PARTY_LICENSES.md"></a></nav></footer>
   </div>`
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T
@@ -47,7 +47,7 @@ function render() {
     model: t.model, seen: t.seen, suggestion: t.suggestion, 'advice-text': t.advice,
     'hibp-title': t.hibpTitle, 'hibp-text': t.hibpText, 'hibp-button': t.hibpButton, 'network-off-label': t.networkOff,
     'learn-title': t.learnTitle, learn1: t.learn1, learn2: t.learn2, learn3: t.learn3,
-    'privacy-link': t.privacyLink, 'methodology-link': t.methodology,
+    'privacy-link': t.privacyLink, 'methodology-link': t.methodology, 'data-link': t.dataNotices,
   }
   for (const [id, value] of Object.entries(labels)) setText(id, value)
   setText('local', $<HTMLInputElement>('network-off').checked ? t.local : t.hibpReady)

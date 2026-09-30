@@ -1,14 +1,18 @@
 import { ZxcvbnFactory, type MatchExtended } from '@zxcvbn-ts/core'
 import { adjacencyGraphs, dictionary as commonDictionary } from '@zxcvbn-ts/language-common'
-import { dictionary as englishDictionary, translations } from '@zxcvbn-ts/language-en'
-import { dictionary as russianDictionary } from '@zxcvbn-ts/language-ru'
+import { translations } from '@zxcvbn-ts/language-en'
+import { languageDictionary, russianCommonWords } from './dictionaries'
 import russianGraph from './russianGraph.json'
 
 const factory = new ZxcvbnFactory({
-  dictionary: { ...commonDictionary, ...englishDictionary, ...russianDictionary },
+  dictionary: { ...commonDictionary, ...languageDictionary },
   graphs: { ...adjacencyGraphs, russian: russianGraph },
   translations,
 })
+
+// This frequency-ranked list is generated from OpenSubtitles/OPUS. Membership
+// validates transliterations without assigning a new rank or using unranked lists.
+const rankedRussianWords = new Set(russianCommonWords)
 
 export type Pattern = { kind: string; length: number | null; detail: string }
 export type Analysis = { score: number; guesses: number; patterns: Pattern[]; transliterated: boolean }
@@ -43,12 +47,14 @@ function description(match: MatchExtended): string {
 export function analyze(password: string): Analysis | null {
   if (!password) return null
   const direct = factory.check(password)
-  const transformed = /[а-яё]{3,}/i.test(password) ? transliterate(password) : null
-  const candidate = transformed ? factory.check(transformed) : null
-  const hasDictionaryEvidence = candidate?.sequence.some(match =>
-    match.pattern === 'dictionary' && match.token.length >= 4 &&
-    match.token.length / transformed!.length >= 0.4)
-  const transliterated = !!candidate && !!hasDictionaryEvidence && candidate.guesses < direct.guesses
+  const cyrillicRuns = Array.from(password.matchAll(/[а-яё]+/giu), match => match[0])
+  const transformed = cyrillicRuns.some(run => run.length >= 4) ? transliterate(password) : null
+  const hasRussianDictionaryEvidence = transformed !== null && cyrillicRuns.every(run => {
+    const word = transliterate(run)
+    return run.length >= 4 && rankedRussianWords.has(word)
+  })
+  const candidate = transformed && hasRussianDictionaryEvidence ? factory.check(transformed) : null
+  const transliterated = !!candidate && hasRussianDictionaryEvidence && candidate.guesses < direct.guesses
   const result = transliterated ? candidate : direct
   return {
     score: result.score,

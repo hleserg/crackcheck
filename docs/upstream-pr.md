@@ -2,7 +2,7 @@
 
 Target: `zxcvbn-ts/zxcvbn` `master`  
 Source: [`hleserg/zxcvbn:codex/russian-keyboard-graph`](https://github.com/hleserg/zxcvbn/tree/codex/russian-keyboard-graph)  
-Status: draft text only; no upstream PR opened.
+Status: opened as [upstream PR #345](https://github.com/zxcvbn-ts/zxcvbn/pull/345); CI awaits maintainer approval for fork workflows.
 
 ## Title
 

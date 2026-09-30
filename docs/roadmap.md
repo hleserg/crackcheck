@@ -7,7 +7,7 @@ CrackCheck is an early-stage project. This roadmap distinguishes the deployed ap
 - Static TypeScript/Vite browser app with Russian and English UI strings.
 - `zxcvbn-ts` analysis using common, English, and official Russian package dictionaries.
 - JCUKEN graph in `src/russianGraph.json`, generated from upstream commit `5782aa3` and integrated locally.
-- Transliteration candidate analysis for Cyrillic runs, selected only when a sufficiently long dictionary match produces a lower estimate.
+- Transliteration candidate analysis requires exact `commonWords-ru` evidence for every Cyrillic run of at least four letters, and selects a lower zxcvbn-ts estimate.
 - Account and educational WPA2-Personal modes.
 - Separate, user-triggered HIBP Pwned Passwords range check.
 
@@ -21,13 +21,13 @@ These are implementation facts, not a claim that the current build has passed an
 
 ## Next priorities
 
-- Audit package and dictionary licenses and notices; follow up upstream on the missing ODC-BY notice and unpinned FakerJS revision in `@zxcvbn-ts/language-ru@4.1.0`.
+- Follow [upstream PR #346](https://github.com/zxcvbn-ts/zxcvbn/pull/346) for the ODC-BY/Faker notices and pinned source revision; audit the optional Wikipedia-derived lists separately.
 - Review score explanations and translations for accuracy and accessibility on keyboard, mobile, and dark/light themes.
 
 ## Later work
 
 - Clarify Russian name and surname data provenance with upstream maintainers; choose a distributable source and preserve its data license.
-- Validate the JCUKEN graph against upstream generator conventions and submit a focused upstream contribution if appropriate.
+- Follow [upstream PR #345](https://github.com/zxcvbn-ts/zxcvbn/pull/345) for the JCUKEN graph and switch to the official release if merged.
 - Evaluate Russian reverse-layout matching (`привет` typed as `ghbdtn`) and Cyrillic/Latin homoglyph matching as separate, evidence-based changes.
 - Maintain dependency updates and a release process with an inventory of bundled data notices.
 
