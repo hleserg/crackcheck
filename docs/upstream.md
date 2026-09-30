@@ -16,7 +16,7 @@ The generator uses OpenSubtitles/OPUS's `ru.freq.gz` for common words. The `zxcv
 
 ## Keyboard graph
 
-The `language-ru@4.1.0` README setup combines its dictionary and translations with `language-common` adjacency graphs. It does not document a Russian JCUKEN graph. CrackCheck integrates `src/russianGraph.json`, generated from [upstream `zxcvbn-ts/zxcvbn` commit `5782aa3`](https://github.com/hleserg/zxcvbn/commit/5782aa3). This graph is local application code and should not be described as shipped in the official npm package or accepted upstream. The focused contribution is committed and pushed to [`hleserg/zxcvbn:codex/russian-keyboard-graph`](https://github.com/hleserg/zxcvbn/tree/codex/russian-keyboard-graph). It passed the graph generator, common-package build, and 127 spatial matcher tests. No upstream PR or merge is implied.
+The `language-ru@4.1.0` README setup combines its dictionary and translations with `language-common` adjacency graphs. It does not document a Russian JCUKEN graph. CrackCheck integrates `src/russianGraph.json`, generated from [upstream `zxcvbn-ts/zxcvbn` commit `5782aa3`](https://github.com/hleserg/zxcvbn/commit/5782aa3). This graph is local application code and should not be described as shipped in the official npm package or accepted upstream. The focused contribution is committed and pushed to [`hleserg/zxcvbn:codex/russian-keyboard-graph`](https://github.com/hleserg/zxcvbn/tree/codex/russian-keyboard-graph). It passed the graph generator, common-package build, and 127 spatial matcher tests. No upstream PR or merge is implied. The proposed title and description are recorded in [the PR draft](upstream-pr.md).
 
 ## Contribution path
 
