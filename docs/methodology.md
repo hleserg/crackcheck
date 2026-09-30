@@ -27,3 +27,5 @@ The JCUKEN adjacency graph at `src/russianGraph.json` was generated from upstrea
 ## HIBP is separate
 
 The estimator does not require network access. The optional HIBP check is a separate user action that uses the Pwned Passwords k-anonymity range endpoint. A positive result means HIBP reports that hash suffix; no result does not prove the password is safe or absent from every breach.
+
+The FakerJS Russian first-name and surname lists have no verified frequency order. CrackCheck uses them to label a dictionary match as a name or surname; they do not contribute ranks to the estimator. The optional Wikipedia-derived lists are excluded pending a source and license audit.

@@ -1,7 +1,7 @@
 import { ZxcvbnFactory, type MatchExtended } from '@zxcvbn-ts/core'
 import { adjacencyGraphs, dictionary as commonDictionary } from '@zxcvbn-ts/language-common'
 import { translations } from '@zxcvbn-ts/language-en'
-import { languageDictionary, russianCommonWords } from './dictionaries'
+import { languageDictionary, russianCommonWords, russianFirstnames, russianLastnames } from './dictionaries'
 import russianGraph from './russianGraph.json'
 
 const factory = new ZxcvbnFactory({
@@ -13,6 +13,8 @@ const factory = new ZxcvbnFactory({
 // This frequency-ranked list is generated from OpenSubtitles/OPUS. Membership
 // validates transliterations without assigning a new rank or using unranked lists.
 const rankedRussianWords = new Set(russianCommonWords)
+const russianNames = new Set(russianFirstnames)
+const russianSurnames = new Set(russianLastnames)
 
 export type Pattern = { kind: string; length: number | null; detail: string }
 export type Analysis = { score: number; guesses: number; patterns: Pattern[]; transliterated: boolean }
@@ -29,7 +31,10 @@ export function transliterate(value: string): string {
 function description(match: MatchExtended): string {
   if (match.pattern === 'dictionary') {
     const name = String(match.dictionaryName || '')
-    if (name.includes('-ru')) return name.includes('firstname') ? 'name' : name.includes('lastname') ? 'surname' : 'russianWord'
+    const word = String(match.matchedWord || '').toLowerCase()
+    if (russianNames.has(word)) return 'name'
+    if (russianSurnames.has(word)) return 'surname'
+    if (name.includes('-ru')) return 'russianWord'
     if (name.includes('firstname')) return 'name'
     if (name.includes('lastname')) return 'surname'
     if (name.includes('password')) return 'commonPassword'
