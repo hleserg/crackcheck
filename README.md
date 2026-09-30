@@ -6,7 +6,7 @@ Repository: <https://github.com/hleserg/crackcheck>
 
 > Пароль анализируется в браузере. Сетевая проверка известных утечек запускается отдельно и только по запросу.
 
-Проект находится в начальной разработке. В текущем исходном коде есть статическое приложение, анализ через `zxcvbn-ts`, русская и английская локализация интерфейса, режим Wi‑Fi / WPA2-Personal и отдельная проверка HIBP по кнопке. Публичный адрес приложения и готовый релиз пока не заявлены.
+Проект находится в ранней версии. В текущем исходном коде есть статическое приложение, анализ через `zxcvbn-ts`, русская и английская локализация интерфейса, режим Wi‑Fi / WPA2-Personal и отдельная проверка HIBP по кнопке. Рабочая версия опубликована: https://hleserg.github.io/crackcheck/.
 
 ## Сейчас в коде
 
@@ -16,9 +16,9 @@ Repository: <https://github.com/hleserg/crackcheck>
 - образовательный режим для собственных Wi‑Fi паролей WPA2-Personal;
 - отдельная opt-in проверка Have I Been Pwned (HIBP).
 
-Для переводов и словарей используется официальный пакет `@zxcvbn-ts/language-ru@4.1.0`. Большие словари пакета представлены латинской транслитерацией: сами по себе они не распознают русские строки вроде `пароль` или `привет`. CrackCheck дополнительно проверяет транслитерированный кандидат для кириллических фрагментов и выбирает его только при обнаружении русского словарного совпадения с меньшей оценкой догадок. Это ограниченная app-level эвристика, а не отдельный upstream matcher. Имена и фамилии в пакете берутся из русских locale-файлов FakerJS (MIT), однако их ревизия в генераторе не закреплена, а списки не следует считать ранжированными по частоте. README пакета ошибочно ссылается на турецкие locale-файлы. Подробности — в [`docs/data-sources.md`](docs/data-sources.md).
+Для переводов и словарей используется официальный пакет `@zxcvbn-ts/language-ru@4.1.0`. Большие словари пакета представлены латинской транслитерацией: сами по себе они не распознают русские строки вроде `пароль` или `привет`. CrackCheck дополнительно проверяет транслитерированный кандидат для кириллических фрагментов и выбирает его при достаточно длинном словарном совпадении и меньшей оценке догадок. Это ограниченная app-level эвристика, а не отдельный upstream matcher. Имена и фамилии в пакете берутся из русских locale-файлов FakerJS (MIT), однако их ревизия в генераторе не закреплена, а списки не следует считать ранжированными по частоте. README пакета ошибочно ссылается на турецкие locale-файлы. Подробности — в [`docs/data-sources.md`](docs/data-sources.md).
 
-Граф JCUKEN в `src/russianGraph.json` сгенерирован по upstream-коммиту `zxcvbn-ts/zxcvbn` `d72e679` и интегрирован локально. Он не входит в опубликованный npm-пакет `language-ru`.
+Граф JCUKEN в `src/russianGraph.json` сгенерирован по upstream-коммиту `zxcvbn-ts/zxcvbn` `5782aa3` и интегрирован локально. Он не входит в опубликованный npm-пакет `language-ru`.
 
 ## Конфиденциальность
 
@@ -64,6 +64,6 @@ Wi‑Fi режим предназначен для оценки собствен
 
 ## English
 
-CrackCheck is an early-stage, local-first password crackability explainer. The app is a static TypeScript/Vite frontend using `zxcvbn-ts`, with Russian and English UI, an educational WPA2-Personal mode, and an optional, explicitly triggered HIBP check. Repository: <https://github.com/hleserg/crackcheck>.
+CrackCheck is a live, early-stage, local-first password crackability explainer. The app is a static TypeScript/Vite frontend using `zxcvbn-ts`, with Russian and English UI, an educational WPA2-Personal mode, and an optional, explicitly triggered HIBP check. Repository: <https://github.com/hleserg/crackcheck>.
 
-The project does not claim a live deployment or complete Russian dictionary coverage. It uses the official `@zxcvbn-ts/language-ru@4.1.0` package for Russian translations and dictionaries; its major dictionaries are Latin transliterations and do not directly match raw Cyrillic words. CrackCheck has a limited app-level transliteration candidate check, not a dedicated upstream matcher. The upstream generator uses Russian FakerJS locale files (MIT) for first names and surnames, although the package README mistakenly links Turkish locale files; these lists are not population-ranked and the generator does not pin the Faker revision. CrackCheck's JCUKEN graph was generated from upstream commit `d72e679` and is integrated locally; it is not shipped in that npm package. HIBP requires a separate network request and uses the Pwned Passwords k-anonymity range protocol: only the first five hexadecimal characters of a locally computed SHA-1 hash are sent. See [privacy details](docs/privacy.md) and [data source status](docs/data-sources.md).
+Live app: https://hleserg.github.io/crackcheck/. Russian dictionary coverage is incomplete. It uses the official `@zxcvbn-ts/language-ru@4.1.0` package for Russian translations and dictionaries; its major dictionaries are Latin transliterations and do not directly match raw Cyrillic words. CrackCheck has a limited app-level transliteration candidate check, not a dedicated upstream matcher. The upstream generator uses Russian FakerJS locale files (MIT) for first names and surnames, although the package README mistakenly links Turkish locale files; these lists are not population-ranked and the generator does not pin the Faker revision. CrackCheck's JCUKEN graph was generated from upstream commit `5782aa3` and is integrated locally; it is not shipped in that npm package. HIBP requires a separate network request and uses the Pwned Passwords k-anonymity range protocol: only the first five hexadecimal characters of a locally computed SHA-1 hash are sent. See [privacy details](docs/privacy.md) and [data source status](docs/data-sources.md).

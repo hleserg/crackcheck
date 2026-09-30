@@ -1,25 +1,28 @@
 # Roadmap
 
-CrackCheck is an early-stage project. This roadmap distinguishes source code currently present from work needed before a public release.
+CrackCheck is an early-stage project. This roadmap distinguishes the deployed application from work that remains.
 
 ## In the current source
 
 - Static TypeScript/Vite browser app with Russian and English UI strings.
 - `zxcvbn-ts` analysis using common, English, and official Russian package dictionaries.
-- JCUKEN graph in `src/russianGraph.json`, generated from upstream commit `d72e679` and integrated locally.
-- Transliteration candidate analysis for Cyrillic runs, selected only when the Russian dictionary match produces a lower estimate.
+- JCUKEN graph in `src/russianGraph.json`, generated from upstream commit `5782aa3` and integrated locally.
+- Transliteration candidate analysis for Cyrillic runs, selected only when a sufficiently long dictionary match produces a lower estimate.
 - Account and educational WPA2-Personal modes.
 - Separate, user-triggered HIBP Pwned Passwords range check.
 
-These are implementation facts, not claims that the current build has passed a complete security review or is deployed publicly.
+These are implementation facts, not a claim that the current build has passed an independent security review. The application is deployed at https://hleserg.github.io/crackcheck/.
 
-## Before describing a public release
+## Release checks completed
 
-- Run and resolve the relevant type, lint, test, and production-build checks.
-- Verify privacy behavior in a built application: local analysis makes no network calls, the password enters no persistent storage or URL, and output rendering handles user-controlled text safely.
+- Typecheck, lint, 12 unit tests, 3 browser tests, and production build passed locally and in CI.
+- Browser tests verified that local input sends no network requests after load and leaves no password in persistent storage, URL, or rendered page text.
+- GitHub Pages is live at https://hleserg.github.io/crackcheck/.
+
+## Next priorities
+
 - Audit package and dictionary licenses and notices; follow up upstream on the missing ODC-BY notice and unpinned FakerJS revision in `@zxcvbn-ts/language-ru@4.1.0`.
 - Review score explanations and translations for accuracy and accessibility on keyboard, mobile, and dark/light themes.
-- Document the actual deployment address and hosting behavior only after it exists and has been checked.
 
 ## Later work
 

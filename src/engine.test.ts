@@ -32,6 +32,8 @@ describe('analyze', () => {
 
   it.each([
     { sample: 'пароль', detail: 'russianWord', transliterated: true },
+    { sample: 'пароль123', detail: 'commonPassword', transliterated: true },
+    { sample: 'Сергей1988', detail: 'name', transliterated: true },
     { sample: 'Иван', detail: 'name', transliterated: true },
     { sample: 'йцукен', detail: 'russianKeyboard', transliterated: false },
   ])('recognizes $sample as $detail', ({ sample, detail, transliterated }) => {

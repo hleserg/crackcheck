@@ -6,8 +6,8 @@ CrackCheck is a static browser application. The repository currently uses TypeSc
 
 - `src/main.ts` builds the page and owns short-lived UI state: locale, analysis scenario, and the password input value.
 - `src/i18n.ts` contains Russian and English interface strings.
-- `src/engine.ts` configures `@zxcvbn-ts/core` with the common, English, and official Russian package dictionaries, then returns a small display-oriented analysis result. For Cyrillic text, it may run a second candidate analysis after transliteration. It selects that result only when a Russian dictionary match exists and its guess estimate is lower than the direct analysis.
-- `src/russianGraph.json` provides the JCUKEN adjacency graph generated from upstream `zxcvbn-ts/zxcvbn` commit `d72e679`. The generated graph is integrated in CrackCheck; it is not claimed to ship in `@zxcvbn-ts/language-ru`.
+- `src/engine.ts` configures `@zxcvbn-ts/core` with the common, English, and official Russian package dictionaries, then returns a small display-oriented analysis result. For Cyrillic text, it may run a second candidate analysis after transliteration. It selects that result only when a sufficiently long dictionary match exists and its guess estimate is lower than the direct analysis.
+- `src/russianGraph.json` provides the JCUKEN adjacency graph generated from upstream `zxcvbn-ts/zxcvbn` commit `5782aa3`. The generated graph is integrated in CrackCheck; it is not claimed to ship in `@zxcvbn-ts/language-ru`.
 - `src/hibp.ts` implements the optional Pwned Passwords range request. It computes SHA-1 locally and sends only a five-character prefix after the user action.
 
 Vite bundles application assets for static hosting. The app does not need a server-side password endpoint. Any hosting provider still receives ordinary page-request metadata.

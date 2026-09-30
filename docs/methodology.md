@@ -20,9 +20,9 @@ The Wi‑Fi / WPA2-Personal view gives context: with suitable authentication mat
 
 ## Russian language behavior
 
-The app imports translations and dictionary data from the official `@zxcvbn-ts/language-ru@4.1.0` package. Its major dictionaries are in Latin transliteration, so direct matching does not identify raw Cyrillic words such as `пароль` or `привет`. For a password containing a Cyrillic run of at least three characters, CrackCheck also analyzes a transliterated candidate. It uses that result only if it contains a Russian dictionary match and estimates fewer guesses than the direct result. This heuristic can miss valid patterns and does not preserve exact character-to-character segment mapping in the UI.
+The app imports translations and dictionary data from the official `@zxcvbn-ts/language-ru@4.1.0` package. Its major dictionaries are in Latin transliteration, so direct matching does not identify raw Cyrillic words such as `пароль` or `привет`. For a password containing a Cyrillic run of at least three characters, CrackCheck also analyzes a transliterated candidate. It uses that result only if it contains a sufficiently long dictionary match covering a substantial part of the candidate and estimates fewer guesses than the direct result. This heuristic can miss valid patterns and does not preserve exact character-to-character segment mapping in the UI.
 
-The JCUKEN adjacency graph at `src/russianGraph.json` was generated from upstream `zxcvbn-ts/zxcvbn` commit `d72e679`. It is integrated in CrackCheck, not shipped by the published `language-ru` npm package. The upstream Russian name lists come from FakerJS Russian locale files, but are not population-ranked and the source revision is not pinned; see [data sources](data-sources.md).
+The JCUKEN adjacency graph at `src/russianGraph.json` was generated from upstream `zxcvbn-ts/zxcvbn` commit `5782aa3`. It is integrated in CrackCheck, not shipped by the published `language-ru` npm package. The upstream Russian name lists come from FakerJS Russian locale files, but are not population-ranked and the source revision is not pinned; see [data sources](data-sources.md).
 
 ## HIBP is separate
 

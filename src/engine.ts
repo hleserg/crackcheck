@@ -43,10 +43,12 @@ function description(match: MatchExtended): string {
 export function analyze(password: string): Analysis | null {
   if (!password) return null
   const direct = factory.check(password)
-  const candidate = /[а-яё]{3,}/i.test(password) ? factory.check(transliterate(password)) : null
-  const hasRussianDictionary = candidate?.sequence.some(match =>
-    match.pattern === 'dictionary' && String(match.dictionaryName).endsWith('-ru'))
-  const transliterated = !!candidate && !!hasRussianDictionary && candidate.guesses < direct.guesses
+  const transformed = /[а-яё]{3,}/i.test(password) ? transliterate(password) : null
+  const candidate = transformed ? factory.check(transformed) : null
+  const hasDictionaryEvidence = candidate?.sequence.some(match =>
+    match.pattern === 'dictionary' && match.token.length >= 4 &&
+    match.token.length / transformed!.length >= 0.4)
+  const transliterated = !!candidate && !!hasDictionaryEvidence && candidate.guesses < direct.guesses
   const result = transliterated ? candidate : direct
   return {
     score: result.score,
