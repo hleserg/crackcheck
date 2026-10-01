@@ -59,9 +59,9 @@ test('HIBP sends a five-character hash prefix only after explicit opt-in', async
   expect(externalRequests).toEqual([])
 
   await expect(page.locator('#network-off')).toBeChecked()
-  await expect(page.getByRole('button', { name: /check with HIBP|проверить по HIBP/i })).toBeDisabled()
+  await expect(page.getByRole('button', { name: /check whether the password leaked|проверить, не утёк ли пароль/i })).toBeDisabled()
   await page.locator('#network-off').uncheck()
-  await page.getByRole('button', { name: /check with HIBP|проверить по HIBP/i }).click()
+  await page.getByRole('button', { name: /check whether the password leaked|проверить, не утёк ли пароль/i }).click()
 
   await expect.poll(() => externalRequests.length).toBe(1)
   expect(externalRequests[0]!.url).toBe('https://api.pwnedpasswords.com/range/5BAA6')
@@ -70,7 +70,7 @@ test('HIBP sends a five-character hash prefix only after explicit opt-in', async
   expect(externalRequests[0]!.body).toBeNull()
   expect(externalRequests[0]!.headers.referer).toBeUndefined()
   expect(externalRequests[0]!.url).not.toContain('1E4C9B93F3F0682250B6CF8331B7EE68FD8')
-  await expect(page.locator('#hibp-status')).toContainText(/no match|совпадений не найдено/i)
+  await expect(page.locator('#hibp-status')).toContainText(/not among leaked|Среди утёкших паролей его нет/i)
 })
 
 test('analysis works offline after the page has loaded', async ({ page, context }) => {

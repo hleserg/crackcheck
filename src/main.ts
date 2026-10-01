@@ -30,7 +30,7 @@ app.innerHTML = `
       <section class="story" aria-labelledby="plan-title"><span class="section-kicker" id="plan-kicker"></span><h2 id="plan-title"></h2><p id="plan-intro"></p><ol class="story-steps"><li id="plan1"></li><li id="plan2"></li><li id="plan3"></li><li id="plan4"></li></ol><p class="story-outro" id="plan-outro"></p></section>
       <section class="story faq" aria-labelledby="faq-title"><span class="section-kicker" id="faq-kicker"></span><h2 id="faq-title"></h2>${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<details><summary id="faq${n}q"></summary><p id="faq${n}a"></p>${n === 9 ? `<p><span class="sources-label"></span> ${hashcat4090}</p>` : ''}</details>`).join('')}</section>
       <section class="story chapter" id="business"></section>
-      <section class="hibp-section"><div><span class="section-kicker">OPT-IN · HIBP</span><h2 id="hibp-title"></h2><p id="hibp-text"></p></div><div class="hibp-actions"><label class="network-switch"><input id="network-off" type="checkbox" checked /><span id="network-off-label"></span></label><button class="primary-button" id="hibp-button" type="button"></button><p id="hibp-status" role="status" aria-live="polite"></p></div></section>
+      <section class="hibp-section"><div><span class="section-kicker" id="hibp-kicker"></span><h2 id="hibp-title"></h2><p id="hibp-text"></p><p id="hibp-how"></p></div><div class="hibp-actions"><label class="network-switch"><input id="network-off" type="checkbox" checked /><span id="network-off-label"></span></label><button class="primary-button" id="hibp-button" type="button"></button><p id="hibp-status" role="status" aria-live="polite"></p></div></section>
       <section class="learn"><span class="section-kicker">CRACKCHECK / 01</span><h2 id="learn-title"></h2><div class="learn-grid"><p id="learn1"></p><p id="learn2"></p><p id="learn3"></p></div></section>
     </main><footer><span>CrackCheck · MIT</span><nav><a id="privacy-link" href="https://github.com/hleserg/crackcheck/blob/main/docs/privacy.md"></a><a id="methodology-link" href="https://github.com/hleserg/crackcheck/blob/main/docs/methodology.md"></a><a id="data-link" href="https://github.com/hleserg/crackcheck/blob/main/THIRD_PARTY_LICENSES.md"></a></nav></footer>
   </div>`
@@ -108,7 +108,7 @@ function render() {
     local: t.local, privacy: t.privacy, 'privacy-similar': t.privacySimilar, 'privacy-offline': t.privacyOffline, 'mode-label': t.mode, account: t.account, wifi: t.wifi,
     'wifi-explanation': t.wifiText, empty: t.empty, 'result-label': t.result, 'time-title': t.timeTitle, 'time-open-label': t.timeOpen, 'time-online-label': t.timeOnline, reuse: t.reuse,
     model: t.model, seen: t.seen, suggestion: t.suggestion,
-    'hibp-title': t.hibpTitle, 'hibp-text': t.hibpText, 'hibp-button': t.hibpButton, 'network-off-label': t.networkOff,
+    'hibp-kicker': t.hibpKicker, 'hibp-title': t.hibpTitle, 'hibp-text': t.hibpText, 'hibp-how': t.hibpHow, 'hibp-button': t.hibpButton, 'network-off-label': t.networkOff,
     'story-kicker': t.storyKicker, 'story-title': t.storyTitle, 'story-intro': t.storyIntro, story1: t.story1, story2: t.story2, story3: t.story3, 'story-outro': t.storyOutro,
     'plan-kicker': t.planKicker, 'plan-title': t.planTitle, 'plan-intro': t.planIntro, plan1: t.plan1, plan2: t.plan2, plan3: t.plan3, plan4: t.plan4, 'plan-outro': t.planOutro, 'faq-kicker': t.faqKicker, 'faq-title': t.faqTitle,
     'gen-kicker': t.genKicker, 'gen-title': t.genTitle, 'gen-intro': t.genIntro, 'gen-length-label': t.genLength, 'gen-digits-label': t.genDigits, 'gen-symbols-label': t.genSymbols,
@@ -193,7 +193,7 @@ $('hibp-button').addEventListener('click', async () => {
   setText('hibp-status', strings[locale].hibpWait)
   try {
     const count = await checkPwnedPassword(value, controller.signal)
-    if (version === requestVersion) setText('hibp-status', count ? `${strings[locale].hibpFound}${new Intl.NumberFormat(locale).format(count)}` : strings[locale].hibpNotFound)
+    if (version === requestVersion) setText('hibp-status', count ? strings[locale].hibpFound.replace('{n}', new Intl.NumberFormat(locale).format(count)) : strings[locale].hibpNotFound)
   } catch (error) {
     if (version === requestVersion && !(error instanceof DOMException && error.name === 'AbortError')) setText('hibp-status', strings[locale].hibpError)
   } finally {
