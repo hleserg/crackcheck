@@ -7,6 +7,7 @@ import { business, renderChapter } from './threats'
 // Sources for the attack speeds quoted on the page.
 const link = (href: string, text: string) => `<a href="${href}" target="_blank" rel="noreferrer">${text}</a>`
 const zxcvbnRates = link('https://github.com/zxcvbn-ts/zxcvbn/blob/master/packages/libraries/main/src/TimeEstimates.ts', 'zxcvbn-ts')
+const lu2018 = link('https://yinqian.org/papers/acsac18a.pdf', 'Lu et al., ACSAC 2018')
 const hashcat4090 = link('https://gist.github.com/Chick3nman/32e662a5bb63bc4f51b847bb422222fd', 'hashcat, RTX 4090')
 const app = document.querySelector<HTMLDivElement>('#app')!
 app.innerHTML = `
@@ -20,12 +21,12 @@ app.innerHTML = `
           <div class="privacy-note"><p id="privacy"></p><ul><li id="privacy-similar"></li><li id="privacy-offline"></li></ul></div><div class="mode-row"><span id="mode-label"></span><div class="segmented" id="scenario" role="group"><button id="account" type="button" aria-pressed="false"></button><button id="wifi" type="button" aria-pressed="true"></button></div></div>
         </div>
         <div id="wifi-explanation" class="wifi-note" hidden></div>
-        <div class="analysis" id="analysis"><p class="empty" id="empty"></p><div id="result" hidden><div class="result-head"><div><span class="section-kicker" id="result-label"></span><h2 id="score"></h2></div><div class="score-index" id="score-index"></div></div><div class="meter" aria-hidden="true"><span id="meter-fill"></span></div><h3 id="time-title"></h3><dl class="times"><div class="account-time"><dt id="time-open-label"></dt><dd id="time-open"></dd></div><div class="account-time"><dt id="time-online-label"></dt><dd id="time-online"></dd></div><div><dt id="time-offline-label"></dt><dd id="time-offline"></dd></div></dl><p class="model" id="guesses"></p><p class="model" id="reuse"></p><p class="model" id="model"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p><p class="model" id="translit-note" hidden></p><p class="model" id="wifi-format" hidden></p><div class="divider"></div><h3 id="seen"></h3><ol class="patterns" id="patterns"></ol><div class="advice"><h3 id="suggestion"></h3><p id="advice-text"></p></div></div></div>
+        <div class="analysis" id="analysis"><p class="empty" id="empty"></p><div id="result" hidden><div class="result-head"><div><span class="section-kicker" id="result-label"></span><h2 id="score"></h2></div><div class="score-index" id="score-index"></div></div><div class="meter" aria-hidden="true"><span id="meter-fill"></span></div><h3 id="time-title"></h3><dl class="times"><div><dt id="time-offline-label"></dt><dd id="time-offline"></dd></div><div class="account-time"><dt id="time-bare-label"></dt><dd id="time-bare"></dd></div><div class="account-time"><dt id="time-open-label"></dt><dd id="time-open"></dd></div><div class="account-time"><dt id="time-online-label"></dt><dd id="time-online"></dd></div></dl><p class="model account-time" id="rate-stat-row"><span id="rate-stat"></span> ${lu2018}</p><p class="model" id="guesses"></p><p class="model" id="reuse"></p><p class="model" id="model"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p><p class="model" id="translit-note" hidden></p><p class="model" id="wifi-format" hidden></p><div class="divider"></div><h3 id="seen"></h3><ol class="patterns" id="patterns"></ol><div class="advice"><h3 id="suggestion"></h3><p id="advice-text"></p></div></div></div>
       </section>
       <section class="generator" id="generator" aria-labelledby="gen-title"><span class="section-kicker" id="gen-kicker"></span><h2 id="gen-title"></h2><p id="gen-intro"></p>
         <div class="gen-box"><div><label class="gen-length" for="gen-length"><span id="gen-length-label"></span><output id="gen-length-value" for="gen-length"></output></label><input id="gen-length" type="range" min="8" max="40" value="16" /><label class="network-switch"><input id="gen-digits" type="checkbox" checked /><span id="gen-digits-label"></span></label><label class="network-switch"><input id="gen-symbols" type="checkbox" checked /><span id="gen-symbols-label"></span></label></div>
           <div><output class="gen-password" id="gen-password"></output><div class="gen-buttons"><button class="small-button" id="gen-new" type="button"></button><button class="small-button" id="gen-copy" type="button"></button></div><p class="model" id="gen-status" role="status" aria-live="polite"></p></div></div>
-        <h3 id="gen-compare"></h3><dl class="times gen-times"><div class="gen-account"><dt id="gen-time-open-label"></dt><dd id="gen-time-open"></dd></div><div class="gen-account"><dt id="gen-time-online-label"></dt><dd id="gen-time-online"></dd></div><div><dt id="gen-time-offline-label"></dt><dd id="gen-time-offline"></dd></div></dl><p class="model" id="gen-rate"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p></section>
+        <h3 id="gen-compare"></h3><dl class="times gen-times"><div><dt id="gen-time-offline-label"></dt><dd id="gen-time-offline"></dd></div><div class="gen-account"><dt id="gen-time-bare-label"></dt><dd id="gen-time-bare"></dd></div><div class="gen-account"><dt id="gen-time-open-label"></dt><dd id="gen-time-open"></dd></div><div class="gen-account"><dt id="gen-time-online-label"></dt><dd id="gen-time-online"></dd></div></dl><p class="model" id="gen-rate"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p></section>
       <section class="story" aria-labelledby="story-title"><span class="section-kicker" id="story-kicker"></span><h2 id="story-title"></h2><p id="story-intro"></p><ol class="story-steps"><li id="story1"></li><li id="story2"></li><li id="story3"></li></ol><p class="story-outro" id="story-outro"></p></section>
       <section class="story" aria-labelledby="plan-title"><span class="section-kicker" id="plan-kicker"></span><h2 id="plan-title"></h2><p id="plan-intro"></p><ol class="story-steps"><li id="plan1"></li><li id="plan2"></li><li id="plan3"></li><li id="plan4"></li></ol><p class="story-outro" id="plan-outro"></p></section>
       <section class="story faq" aria-labelledby="faq-title"><span class="section-kicker" id="faq-kicker"></span><h2 id="faq-title"></h2>${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<details><summary id="faq${n}q"></summary><p id="faq${n}a"></p>${n === 9 ? `<p><span class="sources-label"></span> ${hashcat4090}</p>` : ''}</details>`).join('')}</section>
@@ -83,6 +84,7 @@ function renderGenerator() {
   // A random password is guessed by trying every combination; on average half of them are needed.
   const combos = (charsets.letters.length + (digits ? charsets.digits.length : 0) + (symbols ? charsets.symbols.length : 0)) ** length / 2
   for (const row of document.querySelectorAll<HTMLElement>('.gen-account')) row.hidden = mode === 'wifi'
+  setText('gen-time-bare', duration(combos / 1000))
   setText('gen-time-open', duration(combos / 10))
   setText('gen-time-online', duration(combos / (100 / 3600)))
   setText('gen-time-offline-label', mode === 'wifi' ? t.timeWifi : t.timeOffline)
@@ -103,7 +105,7 @@ function render() {
   const labels: Record<string, string> = {
     eyebrow: t.eyebrow, title: t.title, subtitle: t.subtitle, 'password-label': t.password,
     local: t.local, privacy: t.privacy, 'privacy-similar': t.privacySimilar, 'privacy-offline': t.privacyOffline, 'mode-label': t.mode, account: t.account, wifi: t.wifi,
-    'wifi-explanation': t.wifiText, empty: t.empty, 'result-label': t.result, 'time-title': t.timeTitle, 'time-open-label': t.timeOpen, 'gen-time-open-label': t.timeOpen, 'gen-time-online-label': t.timeOnline, 'time-online-label': t.timeOnline, reuse: t.reuse,
+    'wifi-explanation': t.wifiText, empty: t.empty, 'result-label': t.result, 'time-title': t.timeTitle, 'time-open-label': t.timeOpen, 'gen-time-open-label': t.timeOpen, 'gen-time-bare-label': t.timeBare, 'time-bare-label': t.timeBare, 'gen-time-online-label': t.timeOnline, 'time-online-label': t.timeOnline, reuse: t.reuse,
     model: t.model, seen: t.seen, suggestion: t.suggestion,
     'hibp-kicker': t.hibpKicker, 'hibp-title': t.hibpTitle, 'hibp-text': t.hibpText, 'hibp-how': t.hibpHow, 'hibp-button': t.hibpButton, 'network-off-label': t.networkOff,
     'story-kicker': t.storyKicker, 'story-title': t.storyTitle, 'story-intro': t.storyIntro, story1: t.story1, story2: t.story2, story3: t.story3, 'story-outro': t.storyOutro,
@@ -143,8 +145,10 @@ function render() {
   // IEEE 802.11i: a WPA2-Personal passphrase is 8–63 printable ASCII characters.
   $('wifi-format').hidden = mode !== 'wifi' || /^[\x20-\x7e]{8,63}$/.test(passwordInput.value)
   setText('wifi-format', t.wifiFormat)
-  // Attempts per second: zxcvbn-ts's unthrottled-online, throttled-online and fast-hash rates; 2.5e6 is hashcat's WPA2 speed on one RTX 4090.
+  // Attempts per second: 1000 is our assumption for a site with no protection at all (only the connection limits it); zxcvbn-ts's unthrottled-online, throttled-online and fast-hash rates; 2.5e6 is hashcat's WPA2 speed on one RTX 4090.
   for (const row of document.querySelectorAll<HTMLElement>('.account-time')) row.hidden = mode === 'wifi'
+  setText('time-bare', duration(result.guesses / 1000))
+  setText('rate-stat', t.rateStat)
   setText('time-open', duration(result.guesses / 10))
   setText('time-online', duration(result.guesses / (100 / 3600)))
   setText('time-offline-label', mode === 'wifi' ? t.timeWifi : t.timeOffline)

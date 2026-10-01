@@ -114,7 +114,7 @@ test('Wi-Fi mode flags passwords that WPA2-Personal does not accept', async ({ p
   await page.locator('#account').click()
   await page.locator('#password').fill('short')
   await expect(page.locator('#wifi-format')).toBeHidden()
-  await expect(page.locator('#result .times dt:visible')).toHaveText([/без защиты/, /с защитой/, /Утекла база/])
+  await expect(page.locator('#result .times dt:visible')).toHaveText([/Утекла база/, /совсем без защиты/, /базовой защитой/, /нормальной защитой/])
 })
 
 test('the generator builds random passwords locally and compares character sets', async ({ page, context }) => {
@@ -133,7 +133,7 @@ test('the generator builds random passwords locally and compares character sets'
   await expect(password).toHaveText(/^[a-zA-Z]{8}$/)
   await expect(page.locator('#gen-time-offline')).not.toHaveText(full!)
   await page.locator('#account').click()
-  await expect(page.locator('.gen-times dt:visible')).toHaveText([/без защиты/, /с защитой/, /Утекла база/])
+  await expect(page.locator('.gen-times dt:visible')).toHaveText([/Утекла база/, /совсем без защиты/, /базовой защитой/, /нормальной защитой/])
   const first = await password.textContent()
   await page.locator('#gen-new').click()
   await expect(password).not.toHaveText(first!)
