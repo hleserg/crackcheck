@@ -22,6 +22,10 @@ app.innerHTML = `
         <div id="wifi-explanation" class="wifi-note" hidden></div>
         <div class="analysis" id="analysis"><p class="empty" id="empty"></p><div id="result" hidden><div class="result-head"><div><span class="section-kicker" id="result-label"></span><h2 id="score"></h2></div><div class="score-index" id="score-index"></div></div><div class="meter" aria-hidden="true"><span id="meter-fill"></span></div><h3 id="time-title"></h3><dl class="times"><div class="account-time"><dt id="time-open-label"></dt><dd id="time-open"></dd></div><div class="account-time"><dt id="time-online-label"></dt><dd id="time-online"></dd></div><div><dt id="time-offline-label"></dt><dd id="time-offline"></dd></div></dl><p class="model" id="guesses"></p><p class="model" id="reuse"></p><p class="model" id="model"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p><p class="model" id="translit-note" hidden></p><p class="model" id="wifi-format" hidden></p><div class="divider"></div><h3 id="seen"></h3><ol class="patterns" id="patterns"></ol><div class="advice"><h3 id="suggestion"></h3><p id="advice-text"></p></div></div></div>
       </section>
+      <section class="generator" id="generator" aria-labelledby="gen-title"><span class="section-kicker" id="gen-kicker"></span><h2 id="gen-title"></h2><p id="gen-intro"></p>
+        <div class="gen-box"><div><label class="gen-length" for="gen-length"><span id="gen-length-label"></span><output id="gen-length-value" for="gen-length"></output></label><input id="gen-length" type="range" min="8" max="40" value="16" /><label class="network-switch"><input id="gen-digits" type="checkbox" checked /><span id="gen-digits-label"></span></label><label class="network-switch"><input id="gen-symbols" type="checkbox" checked /><span id="gen-symbols-label"></span></label></div>
+          <div><output class="gen-password" id="gen-password"></output><div class="gen-buttons"><button class="small-button" id="gen-new" type="button"></button><button class="small-button" id="gen-copy" type="button"></button></div><p class="model" id="gen-status" role="status" aria-live="polite"></p></div></div>
+        <h3 id="gen-compare"></h3><dl class="times gen-times">${[0, 1, 2, 3].map(n => `<div id="gen-set${n}"><dt></dt><dd></dd></div>`).join('')}</dl><p class="model" id="gen-note"></p><p class="model" id="gen-rate"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p></section>
       <section class="story" aria-labelledby="story-title"><span class="section-kicker" id="story-kicker"></span><h2 id="story-title"></h2><p id="story-intro"></p><ol class="story-steps"><li id="story1"></li><li id="story2"></li><li id="story3"></li></ol><p class="story-outro" id="story-outro"></p></section>
       <section class="story" aria-labelledby="plan-title"><span class="section-kicker" id="plan-kicker"></span><h2 id="plan-title"></h2><p id="plan-intro"></p><ol class="story-steps"><li id="plan1"></li><li id="plan2"></li><li id="plan3"></li><li id="plan4"></li></ol><p class="story-outro" id="plan-outro"></p></section>
       <section class="story faq" aria-labelledby="faq-title"><span class="section-kicker" id="faq-kicker"></span><h2 id="faq-title"></h2>${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<details><summary id="faq${n}q"></summary><p id="faq${n}a"></p>${n === 9 ? `<p><span class="sources-label"></span> ${hashcat4090}</p>` : ''}</details>`).join('')}</section>
@@ -44,9 +48,49 @@ function duration(seconds: number) {
   const t = strings[locale]
   const units = [['year', 31557600], ['month', 2629800], ['day', 86400], ['hour', 3600], ['minute', 60], ['second', 1]] as const
   if (seconds < 1) return t.instant
-  if (seconds >= 100 * units[0][1]) return t.centuries
+  if (seconds >= 1e12 * units[0][1]) return t.forever
+  if (seconds >= 100 * units[0][1]) return new Intl.NumberFormat(locale, { style: 'unit', unit: 'year', unitDisplay: 'long', notation: 'compact', maximumFractionDigits: 0 }).format(seconds / units[0][1])
   const [unit, size] = units.find(([, size]) => seconds >= size)!
   return new Intl.NumberFormat(locale, { style: 'unit', unit, unitDisplay: 'long', maximumFractionDigits: 0 }).format(Math.floor(seconds / size))
+}
+// Letters are always in; the symbols are printable ASCII that routers accept in a WPA2 passphrase.
+const charsets = { letters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', digits: '0123456789', symbols: '!#$%&*+-=?@^_' }
+const setChoices = [[false, false], [true, false], [false, true], [true, true]] as const
+let generated = ''
+function randomIndex(size: number) {
+  // Rejection sampling: values past the last whole multiple of size would favour the low indices.
+  const value = new Uint32Array(1)
+  do crypto.getRandomValues(value); while (value[0]! >= 2 ** 32 - 2 ** 32 % size)
+  return value[0]! % size
+}
+function generate() {
+  const length = Number($<HTMLInputElement>('gen-length').value)
+  const sets = [charsets.letters.slice(0, 26), charsets.letters.slice(26)]
+  if ($<HTMLInputElement>('gen-digits').checked) sets.push(charsets.digits)
+  if ($<HTMLInputElement>('gen-symbols').checked) sets.push(charsets.symbols)
+  const all = sets.join('')
+  // Redraw until every chosen kind appears, so a site that demands a digit accepts the password.
+  do generated = Array.from({ length }, () => all[randomIndex(all.length)]).join('')
+  while (!sets.every(set => [...generated].some(char => set.includes(char))))
+  setText('gen-status', '')
+  renderGenerator()
+}
+function renderGenerator() {
+  const t = strings[locale]
+  const length = Number($<HTMLInputElement>('gen-length').value)
+  const [digits, symbols] = [$<HTMLInputElement>('gen-digits').checked, $<HTMLInputElement>('gen-symbols').checked]
+  setText('gen-length-value', String(length))
+  setText('gen-password', generated)
+  // A random password is guessed by trying every combination; on average half of them are needed.
+  const rate = mode === 'wifi' ? 2.5e6 : 1e10
+  setChoices.forEach(([withDigits, withSymbols], n) => {
+    const size = charsets.letters.length + (withDigits ? charsets.digits.length : 0) + (withSymbols ? charsets.symbols.length : 0)
+    const row = $(`gen-set${n}`)
+    row.querySelector('dt')!.textContent = t.genSets[n]!.replace('{n}', String(size))
+    row.querySelector('dd')!.textContent = duration(size ** length / 2 / rate)
+    row.classList.toggle('current', withDigits === digits && withSymbols === symbols)
+  })
+  setText('gen-rate', mode === 'wifi' ? t.genRateWifi : t.genRateLeak)
 }
 function invalidateHibp() {
   requestVersion++
@@ -67,6 +111,8 @@ function render() {
     'hibp-title': t.hibpTitle, 'hibp-text': t.hibpText, 'hibp-button': t.hibpButton, 'network-off-label': t.networkOff,
     'story-kicker': t.storyKicker, 'story-title': t.storyTitle, 'story-intro': t.storyIntro, story1: t.story1, story2: t.story2, story3: t.story3, 'story-outro': t.storyOutro,
     'plan-kicker': t.planKicker, 'plan-title': t.planTitle, 'plan-intro': t.planIntro, plan1: t.plan1, plan2: t.plan2, plan3: t.plan3, plan4: t.plan4, 'plan-outro': t.planOutro, 'faq-kicker': t.faqKicker, 'faq-title': t.faqTitle,
+    'gen-kicker': t.genKicker, 'gen-title': t.genTitle, 'gen-intro': t.genIntro, 'gen-length-label': t.genLength, 'gen-digits-label': t.genDigits, 'gen-symbols-label': t.genSymbols,
+    'gen-new': t.genNew, 'gen-copy': t.genCopy, 'gen-compare': t.genCompare, 'gen-note': t.genNote,
     'learn-title': t.learnTitle, learn1: t.learn1, learn2: t.learn2, learn3: t.learn3,
     'privacy-link': t.privacyLink, 'methodology-link': t.methodology, 'data-link': t.dataNotices,
   }
@@ -85,6 +131,7 @@ function render() {
   $('wifi-explanation').hidden = mode !== 'wifi'
   $('account').setAttribute('aria-pressed', String(mode === 'account'))
   $('wifi').setAttribute('aria-pressed', String(mode === 'wifi'))
+  renderGenerator()
   const result = analyze(passwordInput.value)
   $('empty').hidden = !!result
   $('result').hidden = !result
@@ -131,6 +178,9 @@ $('network-off').addEventListener('change', () => { invalidateHibp(); render() }
 $('locale').addEventListener('click', () => { locale = locale === 'ru' ? 'en' : 'ru'; render() })
 $('account').addEventListener('click', () => { mode = 'account'; render() })
 $('wifi').addEventListener('click', () => { mode = 'wifi'; render() })
+for (const id of ['gen-length', 'gen-digits', 'gen-symbols', 'gen-new']) $(id).addEventListener(id === 'gen-new' ? 'click' : 'input', generate)
+$('gen-copy').addEventListener('click', () => navigator.clipboard.writeText(generated).then(
+  () => setText('gen-status', strings[locale].genCopied), () => setText('gen-status', strings[locale].genCopyFailed)))
 $('hibp-button').addEventListener('click', async () => {
   const value = passwordInput.value
   if (!value || $<HTMLInputElement>('network-off').checked) return
@@ -150,6 +200,7 @@ $('hibp-button').addEventListener('click', async () => {
     if (version === requestVersion) { button.disabled = false; hibpController = null }
   }
 })
+generate()
 render()
 // The worker only caches the site's own static files, so later visits open offline.
 if (import.meta.env.PROD && 'serviceWorker' in navigator) navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {})

@@ -24,3 +24,5 @@ Not released yet. This file will record user-visible changes beginning with the 
 - Add a chapter on how people usually get scammed, including what a broken-into home Wi‑Fi exposes, and a separate business page on attacks on companies and sole traders.
 - FAQ: in Yandex Browser, passwords are end-to-end encrypted only after you create a master password.
 - FAQ: step-by-step instructions for turning on password encryption in Yandex Browser (master password with a reset key) and Google Password Manager (on-device encryption).
+- Add a random password generator: length slider (8–40), digits and symbols checkboxes, copy button. It uses the browser's `crypto.getRandomValues` with rejection sampling, keeps nothing, and compares the guessing time of four character sets at the chosen length.
+- Show crack times over a century in compact years (for example, "4 млрд лет") and cap them at "over a trillion years".
