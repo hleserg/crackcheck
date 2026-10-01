@@ -31,11 +31,14 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const request = event.request
   if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return
-  // ponytail: the page is cache-first too, so a deploy shows on the second visit; make navigations network-first if that lag matters
-  // Navigations ignore the query string; a page URL the cache does not know (./?x, ./#y) falls back to the main page.
-  event.respondWith(caches.open(CACHE).then(async cache => request.mode === 'navigate'
-    ? await cache.match(request, { ignoreVary: true, ignoreSearch: true }) || await cache.match(URLS[0], { ignoreVary: true })
-    : await cache.match(request, { ignoreVary: true })).then(cached => cached || fetch(request)))
+  // Pages are network-first so a deploy shows on the next load; the cache is the offline fallback.
+  // Hashed assets are cache-first: a new page asks for new names, which miss the cache and go to the network.
+  if (request.mode === 'navigate') {
+    event.respondWith(fetch(request).catch(() => caches.open(CACHE).then(async cache =>
+      await cache.match(request, { ignoreVary: true, ignoreSearch: true }) || await cache.match(URLS[0], { ignoreVary: true }))))
+    return
+  }
+  event.respondWith(caches.open(CACHE).then(cache => cache.match(request, { ignoreVary: true })).then(cached => cached || fetch(request)))
 })
 `)
     },

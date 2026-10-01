@@ -21,7 +21,7 @@ The browser reads the password from the password input, passes it directly to `a
 
 ### Offline opening
 
-`vite.config.ts` writes `dist/sw.js` after each build. It precaches `index.html` and the hashed assets under a cache name derived from their contents. `src/main.ts` registers it in production builds only. Requests are answered cache-first, so a new deploy appears on the visit after the worker updates.
+`vite.config.ts` writes `dist/sw.js` after each build. It precaches `index.html` and the hashed assets under a cache name derived from their contents. `src/main.ts` registers it in production builds only. Pages are network-first with the cache as the offline fallback, so a new deploy appears on the next load; hashed assets are cache-first.
 
 ### HIBP
 
