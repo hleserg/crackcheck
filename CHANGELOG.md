@@ -31,3 +31,4 @@ Not released yet. This file will record user-visible changes beginning with the 
 - Add a random password generator: length slider (8–40), digits and symbols checkboxes, copy button. It uses the browser's `crypto.getRandomValues` with rejection sampling, keeps nothing, and compares the guessing time of four character sets at the chosen length.
 - Show crack times over a century in compact years (for example, "4 млрд лет") and cap them at "over a trillion years".
 - Show four crack-time rows in order of danger (leaked database, no protection, basic, proper) and cite a 2018 study of login rate limiting.
+- Move the three essential rules above the explanation and add a FAQ on saving the Wi‑Fi password in a password manager.

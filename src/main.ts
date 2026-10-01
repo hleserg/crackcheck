@@ -27,12 +27,12 @@ app.innerHTML = `
         <div class="gen-box"><div><label class="gen-length" for="gen-length"><span id="gen-length-label"></span><output id="gen-length-value" for="gen-length"></output></label><input id="gen-length" type="range" min="8" max="40" value="16" /><label class="network-switch"><input id="gen-digits" type="checkbox" checked /><span id="gen-digits-label"></span></label><label class="network-switch"><input id="gen-symbols" type="checkbox" checked /><span id="gen-symbols-label"></span></label></div>
           <div><output class="gen-password" id="gen-password"></output><div class="gen-buttons"><button class="small-button" id="gen-new" type="button"></button><button class="small-button" id="gen-copy" type="button"></button></div><p class="model" id="gen-status" role="status" aria-live="polite"></p></div></div>
         <h3 id="gen-compare"></h3><dl class="times gen-times"><div><dt id="gen-time-offline-label"></dt><dd id="gen-time-offline"></dd></div><div class="gen-account"><dt id="gen-time-bare-label"></dt><dd id="gen-time-bare"></dd></div><div class="gen-account"><dt id="gen-time-open-label"></dt><dd id="gen-time-open"></dd></div><div class="gen-account"><dt id="gen-time-online-label"></dt><dd id="gen-time-online"></dd></div></dl><p class="model" id="gen-rate"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p></section>
+      <section class="learn"><span class="section-kicker" id="learn-kicker"></span><h2 id="learn-title"></h2><div class="learn-grid"><p id="learn1"></p><p id="learn2"></p><p id="learn3"></p></div></section>
       <section class="story" aria-labelledby="story-title"><span class="section-kicker" id="story-kicker"></span><h2 id="story-title"></h2><p id="story-intro"></p><ol class="story-steps"><li id="story1"></li><li id="story2"></li><li id="story3"></li></ol><p class="story-outro" id="story-outro"></p></section>
       <section class="story" aria-labelledby="plan-title"><span class="section-kicker" id="plan-kicker"></span><h2 id="plan-title"></h2><p id="plan-intro"></p><ol class="story-steps"><li id="plan1"></li><li id="plan2"></li><li id="plan3"></li><li id="plan4"></li></ol><p class="story-outro" id="plan-outro"></p></section>
-      <section class="story faq" aria-labelledby="faq-title"><span class="section-kicker" id="faq-kicker"></span><h2 id="faq-title"></h2>${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<details><summary id="faq${n}q"></summary><p id="faq${n}a"></p>${n === 9 ? `<p><span class="sources-label"></span> ${hashcat4090}</p>` : ''}</details>`).join('')}</section>
+      <section class="story faq" aria-labelledby="faq-title"><span class="section-kicker" id="faq-kicker"></span><h2 id="faq-title"></h2>${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<details><summary id="faq${n}q"></summary><p id="faq${n}a"></p>${n === 9 ? `<p><span class="sources-label"></span> ${hashcat4090}</p>` : ''}</details>`).join('')}</section>
       <section class="story chapter" id="business"></section>
       <section class="hibp-section"><div><span class="section-kicker" id="hibp-kicker"></span><h2 id="hibp-title"></h2><p id="hibp-text"></p><p id="hibp-how"></p></div><div class="hibp-actions"><label class="network-switch"><input id="network-off" type="checkbox" checked /><span id="network-off-label"></span></label><button class="primary-button" id="hibp-button" type="button"></button><p id="hibp-status" role="status" aria-live="polite"></p></div></section>
-      <section class="learn"><span class="section-kicker">CRACKCHECK / 01</span><h2 id="learn-title"></h2><div class="learn-grid"><p id="learn1"></p><p id="learn2"></p><p id="learn3"></p></div></section>
     </main><footer><span>CrackCheck · MIT</span><nav><a id="privacy-link" href="https://github.com/hleserg/crackcheck/blob/main/docs/privacy.md"></a><a id="methodology-link" href="https://github.com/hleserg/crackcheck/blob/main/docs/methodology.md"></a><a id="data-link" href="https://github.com/hleserg/crackcheck/blob/main/THIRD_PARTY_LICENSES.md"></a></nav></footer>
   </div>`
 
@@ -112,12 +112,12 @@ function render() {
     'plan-kicker': t.planKicker, 'plan-title': t.planTitle, 'plan-intro': t.planIntro, plan1: t.plan1, plan2: t.plan2, plan3: t.plan3, plan4: t.plan4, 'plan-outro': t.planOutro, 'faq-kicker': t.faqKicker, 'faq-title': t.faqTitle,
     'gen-kicker': t.genKicker, 'gen-title': t.genTitle, 'gen-intro': t.genIntro, 'gen-length-label': t.genLength, 'gen-digits-label': t.genDigits, 'gen-symbols-label': t.genSymbols,
     'gen-new': t.genNew, 'gen-copy': t.genCopy, 'gen-compare': t.genCompare,
-    'learn-title': t.learnTitle, learn1: t.learn1, learn2: t.learn2, learn3: t.learn3,
+    'learn-kicker': t.learnKicker, 'learn-title': t.learnTitle, learn1: t.learn1, learn2: t.learn2, learn3: t.learn3,
     'privacy-link': t.privacyLink, 'methodology-link': t.methodology, 'data-link': t.dataNotices,
   }
   for (const [id, value] of Object.entries(labels)) setText(id, value)
   for (const label of document.querySelectorAll('.sources-label')) label.textContent = t.sources
-  for (const n of [1, 2, 3, 4, 5, 6, 7, 8, 9] as const) { setText(`faq${n}q`, t[`faq${n}q`]); setText(`faq${n}a`, t[`faq${n}a`]) }
+  for (const n of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const) { setText(`faq${n}q`, t[`faq${n}q`]); setText(`faq${n}a`, t[`faq${n}a`]) }
   setText('local', $<HTMLInputElement>('network-off').checked ? t.local : t.hibpReady)
   passwordInput.placeholder = t.placeholder
   $('show').setAttribute('aria-label', t.show)
