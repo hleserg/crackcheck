@@ -21,7 +21,7 @@ Not released yet. This file will record user-visible changes beginning with the 
 - Open in Russian by default, whatever the browser language; English is one click away.
 - Show the password with an eye icon; remove the Clear button.
 - Explain the result in plain words: how long guessing takes when a site limits attempts and when its password database leaks (in Wi‑Fi mode, a captured handshake on one GPU), why no honest probability exists, what each part of the password means and its frequency rank, and advice that depends on the score.
-- Add a chapter on how people usually get scammed, including what a broken-into home Wi‑Fi exposes, and a separate business page on attacks on companies and sole traders.
+- Add a collapsed chapter on attacks on companies and sole traders to the main page, including why the IT contractor who built the site can be the weakest point and why a one-off check by a separate security specialist is worth paying for.
 - FAQ: in Yandex Browser, passwords are end-to-end encrypted only after you create a master password.
 - FAQ: step-by-step instructions for turning on password encryption in Yandex Browser (master password with a reset key) and Google Password Manager (on-device encryption).
 - Add a random password generator: length slider (8–40), digits and symbols checkboxes, copy button. It uses the browser's `crypto.getRandomValues` with rejection sampling, keeps nothing, and compares the guessing time of four character sets at the chosen length.

@@ -48,5 +48,4 @@ self.addEventListener('fetch', event => {
 export default defineConfig({
   base: process.env.GITHUB_PAGES === 'true' ? '/crackcheck/' : '/',
   plugins: [offlineWorker()],
-  build: { rolldownOptions: { input: { main: 'index.html', business: 'business.html' } } },
 })

@@ -91,7 +91,7 @@ test('a returning visit opens without a network and caches only static files', a
     return { names, urls, origin: location.origin }
   })
   expect(cached.names).toHaveLength(1)
-  for (const url of cached.urls) expect(url).toMatch(new RegExp(`^${cached.origin}/(assets/[\\w.-]+|business\\.html)?$`))
+  for (const url of cached.urls) expect(url).toMatch(new RegExp(`^${cached.origin}/(assets/[\\w.-]+)?$`))
 
   await context.setOffline(true)
   // Proves the browser is really offline: a URL the worker has not cached must fail.
@@ -101,8 +101,6 @@ test('a returning visit opens without a network and caches only static files', a
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   await page.locator('#password').fill('private-example-password-482!')
   await expect(page.locator('#score')).not.toBeEmpty()
-  await page.locator('#people .chapter-link').click()
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Как атакуют компании и ИП')
 })
 
 test('Wi-Fi mode flags passwords that WPA2-Personal does not accept', async ({ page }) => {
@@ -148,15 +146,16 @@ test('explains Russian typed with the English layout', async ({ page }) => {
   await expect(page.locator('#translit-note')).toContainText(/English keyboard layout|английской раскладке/)
 })
 
-test('the people chapter links to a separate business page in both languages', async ({ page }) => {
+test('the business chapter is a collapsed group on the main page in both languages', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('#people h2')).toHaveText('Как обычно обманывают людей')
+  const chapter = page.locator('#business details')
+  await expect(page.locator('#business h2')).toHaveText('Как атакуют компании и ИП')
+  await expect(chapter).not.toHaveAttribute('open')
+  await expect(page.getByText(/отдельному специалисту по безопасности/)).toBeHidden()
+  await page.locator('#business summary').click()
+  await expect(page.getByText(/отдельному специалисту по безопасности/)).toBeVisible()
   await page.locator('#locale').click()
-  await expect(page.locator('#people h2')).toHaveText('How people usually get scammed')
-  await page.locator('#people .chapter-link').click()
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Как атакуют компании и ИП')
-  await page.locator('#locale').click()
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('How attackers target companies')
+  await expect(page.locator('#business h2')).toHaveText('How attackers target companies')
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
 })
 
@@ -193,9 +192,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await page.locator('#password').fill('password')
     await page.locator('#wifi').click()
     await page.locator('#hibp-status').evaluate(node => { node.textContent = 'status' })
-    await page.locator('.faq details').evaluateAll(items => items.forEach(item => { (item as HTMLDetailsElement).open = true }))
-    const filled = await lowContrastText()
-    await page.goto('/business.html')
-    expect([...emptyState, ...filled, ...await lowContrastText()]).toEqual([])
+    await page.locator('details').evaluateAll(items => items.forEach(item => { (item as HTMLDetailsElement).open = true }))
+    expect([...emptyState, ...await lowContrastText()]).toEqual([])
   })
 }
