@@ -20,3 +20,4 @@ Not released yet. This file will record user-visible changes beginning with the 
 - Explain the result in plain words: how long guessing takes when a site limits attempts and when its password database leaks (in Wi‑Fi mode, a captured handshake on one GPU), why no honest probability exists, what each part of the password means and its frequency rank, and advice that depends on the score.
 - Add a chapter on how people usually get scammed, including what a broken-into home Wi‑Fi exposes, and a separate business page on attacks on companies and sole traders.
 - FAQ: in Yandex Browser, passwords are end-to-end encrypted only after you create a master password.
+- FAQ: step-by-step instructions for turning on password encryption in Yandex Browser (master password with a reset key) and Google Password Manager (on-device encryption).
