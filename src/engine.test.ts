@@ -19,6 +19,13 @@ const fullFactory = new ZxcvbnFactory({
 })
 
 describe('analyze', () => {
+  it('scores the privacy hint examples the same, as the page promises', () => {
+    for (const [real, similar] of [['Лена1988', 'Маша1991'], ['Lena1988', 'Masha1991']]) {
+      expect(analyze(similar)?.score).toBe(analyze(real)?.score)
+      expect(Math.abs(Math.log2(analyze(similar)!.guesses / analyze(real)!.guesses))).toBeLessThan(1)
+    }
+  })
+
   it('returns no result for an empty password', () => {
     expect(analyze('')).toBeNull()
   })

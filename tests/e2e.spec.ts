@@ -32,6 +32,7 @@ test('password controls remain keyboard accessible at a mobile viewport', async 
   await page.goto('/')
   const input = page.locator('#password')
   await expect(input).toBeVisible()
+  expect(await page.evaluate(() => { const box = document.querySelector('.workspace')!; return box.scrollWidth <= box.clientWidth })).toBe(true)
   await input.focus()
   await page.keyboard.press('Tab')
   await expect(page.locator('#show')).toBeFocused()

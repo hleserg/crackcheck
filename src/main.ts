@@ -12,7 +12,7 @@ app.innerHTML = `
       <section class="workspace" id="workspace">
         <div class="entry"><div class="entry-head"><label for="password" id="password-label"></label><span class="privacy-badge"><span class="badge-dot"></span><span id="local"></span></span></div>
           <div class="input-row"><input id="password" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text" /><button id="show" class="input-button" type="button"></button><button id="clear" class="input-button" type="button"></button></div>
-          <p class="privacy-note" id="privacy"></p><div class="mode-row"><span id="mode-label"></span><div class="segmented" id="scenario" role="group"><button id="account" type="button" aria-pressed="true"></button><button id="wifi" type="button" aria-pressed="false"></button></div></div>
+          <div class="privacy-note"><p id="privacy"></p><ul><li id="privacy-similar"></li><li id="privacy-offline"></li></ul></div><div class="mode-row"><span id="mode-label"></span><div class="segmented" id="scenario" role="group"><button id="account" type="button" aria-pressed="true"></button><button id="wifi" type="button" aria-pressed="false"></button></div></div>
         </div>
         <div id="wifi-explanation" class="wifi-note" hidden></div>
         <div class="analysis" id="analysis"><p class="empty" id="empty"></p><div id="result" hidden><div class="result-head"><div><span class="section-kicker" id="result-label"></span><h2 id="score"></h2></div><div class="score-index" id="score-index"></div></div><div class="meter" aria-hidden="true"><span id="meter-fill"></span></div><div class="guess-row"><div><span class="section-kicker" id="guesses-label"></span><p class="guesses" id="guesses"></p></div></div><p class="model" id="model"></p><p class="model" id="translit-note" hidden></p><p class="model" id="wifi-format" hidden></p><div class="divider"></div><h3 id="seen"></h3><ol class="patterns" id="patterns"></ol><div class="advice"><h3 id="suggestion"></h3><p id="advice-text"></p></div></div></div>
@@ -43,7 +43,7 @@ function render() {
   document.title = locale === 'ru' ? 'CrackCheck — разбор пароля в браузере' : 'CrackCheck — local password analysis'
   const labels: Record<string, string> = {
     eyebrow: t.eyebrow, title: t.title, subtitle: t.subtitle, 'password-label': t.password,
-    local: t.local, privacy: t.privacy, 'mode-label': t.mode, account: t.account, wifi: t.wifi,
+    local: t.local, privacy: t.privacy, 'privacy-similar': t.privacySimilar, 'privacy-offline': t.privacyOffline, 'mode-label': t.mode, account: t.account, wifi: t.wifi,
     'wifi-explanation': t.wifiText, empty: t.empty, 'result-label': t.result, 'guesses-label': t.guesses,
     model: t.model, seen: t.seen, suggestion: t.suggestion, 'advice-text': t.advice,
     'hibp-title': t.hibpTitle, 'hibp-text': t.hibpText, 'hibp-button': t.hibpButton, 'network-off-label': t.networkOff,

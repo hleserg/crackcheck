@@ -11,3 +11,5 @@ Not released yet. This file will record user-visible changes beginning with the 
 - Recognize ranked Russian words typed with the English layout and Russian adjectives ending in -ый.
 - Open without a network after the first visit: a service worker caches the site's own static files.
 - Explain with a short everyday story why one password on every site is dangerous, and suggest sign-in codes for email.
+- Show two checks a visitor can do without trusting the site: enter a similar password instead of the real one, or use airplane mode and close the tab.
+- Fix the password panel being cut off on the right on phones.
