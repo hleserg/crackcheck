@@ -15,3 +15,6 @@ Not released yet. This file will record user-visible changes beginning with the 
 - Fix the password panel being cut off on the right on phones.
 - Add a short plan for people who reuse a few passwords everywhere: built-in password manager, email first, then accounts with money, reset the rest on next sign-in.
 - Answer common doubts in plain words: what if the manager is hacked or hands passwords to the authorities, a lost phone or forgotten main password, a paper notebook, "who would want me", sign-in codes, a phone in someone else's hands.
+- Open in Russian by default, whatever the browser language; English is one click away.
+- Show the password with an eye icon; remove the Clear button.
+- Explain the result in plain words: how long guessing takes when a site limits attempts and when its password database leaks (in Wi‑Fi mode, a captured handshake on one GPU), why no honest probability exists, what each part of the password means and its frequency rank, and advice that depends on the score.

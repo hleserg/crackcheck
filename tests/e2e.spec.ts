@@ -118,7 +118,7 @@ test('Wi-Fi mode flags passwords that WPA2-Personal does not accept', async ({ p
 test('explains Russian typed with the English layout', async ({ page }) => {
   await page.goto('/')
   await page.locator('#password').fill('ctvmz')
-  await expect(page.locator('#translit-note')).toContainText('English keyboard layout')
+  await expect(page.locator('#translit-note')).toContainText(/English keyboard layout|английской раскладке/)
 })
 
 for (const colorScheme of ['light', 'dark'] as const) {

@@ -4,7 +4,7 @@ CrackCheck is a static browser application. The repository currently uses TypeSc
 
 ## Runtime pieces
 
-- `src/main.ts` builds the page and owns short-lived UI state: locale, analysis scenario, and the password input value.
+- `src/main.ts` builds the page and owns short-lived UI state: locale (Russian by default), analysis scenario, and the password input value. It turns the guess count into crack times at fixed rates: 100 per hour for a throttled online attack, 10^10 per second for a leaked fast hash, and 10^6 per second for WPA2 on one GPU.
 - `src/i18n.ts` contains Russian and English interface strings.
 - `src/engine.ts` configures `@zxcvbn-ts/core` with the common package and selected English/Russian data files. `src/dictionaries.ts` excludes optional Wikipedia lists and keeps unranked FakerJS Russian names outside the scoring dictionary. For Cyrillic text, it runs a second candidate analysis only when every Cyrillic run has at least four letters and its transliteration exactly matches ranked `commonWords-ru`; it selects that result only when zxcvbn-ts estimates fewer guesses. Without Cyrillic input, it also tries Latin key runs as Russian typed with the English layout (`ctvmz` → `семья`): each run must map to a ranked `commonWords-ru` word under the same rule and must not be an English dictionary word or name.
 - `src/russianGraph.json` provides the JCUKEN adjacency graph generated from upstream `zxcvbn-ts/zxcvbn` commit `5782aa3`. The generated graph is integrated in CrackCheck; it is not claimed to ship in `@zxcvbn-ts/language-ru`.

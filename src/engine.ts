@@ -28,7 +28,7 @@ export function fromEnglishLayout(value: string): string {
 }
 
 export type Variant = 'reversed' | 'l33t'
-export type Pattern = { kind: string; length: number | null; detail: string; variants: Variant[] }
+export type Pattern = { kind: string; length: number | null; detail: string; variants: Variant[]; rank: number | null }
 export type Analysis = { score: number; guesses: number; patterns: Pattern[]; transliterated: boolean; layoutSwapped: boolean }
 
 const translit: Record<string, string> = {
@@ -97,6 +97,7 @@ export function analyze(password: string): Analysis | null {
       variants: match.pattern === 'dictionary'
         ? (['reversed', 'l33t'] as const).filter(variant => match[variant])
         : [],
+      rank: match.pattern === 'dictionary' ? Number(match.rank) : null,
     })),
   }
 }
