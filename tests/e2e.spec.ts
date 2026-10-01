@@ -70,7 +70,7 @@ test('HIBP sends a five-character hash prefix only after explicit opt-in', async
   expect(externalRequests[0]!.body).toBeNull()
   expect(externalRequests[0]!.headers.referer).toBeUndefined()
   expect(externalRequests[0]!.url).not.toContain('1E4C9B93F3F0682250B6CF8331B7EE68FD8')
-  await expect(page.locator('#hibp-status')).toContainText(/not among leaked|Среди утёкших паролей его нет/i)
+  await expect(page.locator('#hibp-status')).toContainText(/not in this database|В этой базе его нет/i)
 })
 
 test('analysis works offline after the page has loaded', async ({ page, context }) => {

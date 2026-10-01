@@ -193,7 +193,11 @@ $('hibp-button').addEventListener('click', async () => {
   setText('hibp-status', strings[locale].hibpWait)
   try {
     const count = await checkPwnedPassword(value, controller.signal)
-    if (version === requestVersion) setText('hibp-status', count ? strings[locale].hibpFound.replace('{n}', new Intl.NumberFormat(locale).format(count)) : strings[locale].hibpNotFound)
+    if (version === requestVersion) {
+      const status = $('hibp-status')
+      if (count) setText('hibp-status', strings[locale].hibpFound.replace('{n}', new Intl.NumberFormat(locale).format(count)))
+      else status.replaceChildren(`${strings[locale].hibpNotFound} `, Object.assign(document.createElement('strong'), { textContent: strings[locale].hibpNotFoundBold }))
+    }
   } catch (error) {
     if (version === requestVersion && !(error instanceof DOMException && error.name === 'AbortError')) setText('hibp-status', strings[locale].hibpError)
   } finally {
