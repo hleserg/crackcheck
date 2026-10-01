@@ -35,6 +35,14 @@ export const business: Record<Locale, Chapter> = {
         'У подрядчика обычно больше всех доступов: хостинг, сайт, база клиентов, почта, удалённый вход в офис. Один слабый или общий на всех клиентов пароль — и утечка пойдёт через него.',
         'Поэтому стоит один раз заплатить отдельному специалисту по безопасности — не тому, кто всё делал: пусть проверит сайт, доступы и копии и скажет, что исправить.',
       ] },
+      { title: 'Как безопасно передавать доступы подрядчику', items: [
+        'Пароль не отправляют в почте, обычном чате и тем более в закреплённом сообщении общей группы: его увидят все участники, и он останется в истории навсегда, в том числе у тех, кто потом покинет чат или сменит работу.',
+        'Лучше всего — менеджер паролей с общим хранилищем: подрядчик получает доступ к записи, а не сам пароль, и вы можете отозвать его в один клик.',
+        'Если менеджера нет: логин и пароль — разными каналами и тому, кто будет ими пользоваться. Сразу после входа подрядчик меняет пароль на свой.',
+        'Просите не общий админский логин, а отдельную учётную запись на каждого человека с минимально нужными правами: тогда видно, кто что сделал, и отключить можно одного.',
+        'Включите вход с кодом. Если пароль всё же засветился, одного его уже не хватит.',
+        'Когда работа закончена, отключите доступ и смените пароли. А если пароль уже побывал в общем чате, считайте его скомпрометированным: смените и удалите сообщение.',
+      ] },
       { title: 'Минимум, который закрывает большую часть атак', items: [
         'Вход с кодом для почты, банка и любого удалённого доступа.',
         'Правило: новые реквизиты принимаются только после звонка партнёру по номеру, который у вас уже был.',
@@ -76,6 +84,14 @@ export const business: Record<Locale, Chapter> = {
         'Whoever built your website or set up your accounting system did not necessarily think about security. “It works” and “it cannot be broken into” are different jobs, often for different specialists.',
         'The contractor usually has more access than anyone: hosting, the website, the customer database, email, remote access to the office. One weak password, or one shared across all their clients, and the leak goes through them.',
         'So it is worth paying a separate security specialist once — not the person who did the work — to check the website, the accesses and the backups and say what to fix.',
+      ] },
+      { title: 'How to hand over access to a contractor safely', items: [
+        'Do not send a password by email, in an ordinary chat, and certainly not as a pinned message in a group: every member sees it, and it stays in the history for good, even for people who later leave the chat or change jobs.',
+        'Best is a password manager with a shared vault: the contractor gets access to an entry rather than the password itself, and you can revoke it in one click.',
+        'Without a manager: send the login and the password through different channels, and only to the person who will use them. The contractor changes the password to their own right after signing in.',
+        'Ask for a separate account for each person with only the rights they need, not a shared admin login: then you can see who did what and switch off one person.',
+        'Turn on sign-in codes. If the password does leak, it is no longer enough on its own.',
+        'When the work is done, remove the access and change the passwords. If a password has ever been in a group chat, treat it as compromised: change it and delete the message.',
       ] },
       { title: 'The minimum that stops most attacks', items: [
         'Sign-in codes for email, the bank and any remote access.',
