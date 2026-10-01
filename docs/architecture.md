@@ -18,6 +18,10 @@ Vite bundles application assets for static hosting. The app does not need a serv
 
 The browser reads the password from the password input, passes it directly to `analyze`, and renders the resulting score, guess estimate, and recognized pattern summaries. The code should not copy the password into the URL, persistent storage, telemetry, or application logs. Typing triggers local analysis only.
 
+### Offline opening
+
+`vite.config.ts` writes `dist/sw.js` after each build. It precaches `index.html` and the hashed assets under a cache name derived from their contents. `src/main.ts` registers it in production builds only. Requests are answered cache-first, so a new deploy appears on the visit after the worker updates.
+
 ### HIBP
 
 The HIBP request runs only when the user presses the separate check button. `src/hibp.ts` hashes the value with Web Crypto, requests the Pwned Passwords range for the first five hex characters, and compares response suffixes in the browser. The service sees the prefix request and network metadata. See [privacy model](privacy.md).

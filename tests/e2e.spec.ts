@@ -81,6 +81,27 @@ test('analysis works offline after the page has loaded', async ({ page, context 
   await expect(page.locator('#score')).not.toBeEmpty()
 })
 
+test('a returning visit opens without a network and caches only static files', async ({ page, context }) => {
+  await page.goto('/')
+  await page.evaluate(() => navigator.serviceWorker.ready)
+  const cached = await page.evaluate(async () => {
+    const names = await caches.keys()
+    const urls = (await Promise.all(names.map(async name => (await (await caches.open(name)).keys()).map(request => request.url)))).flat()
+    return { names, urls, origin: location.origin }
+  })
+  expect(cached.names).toHaveLength(1)
+  for (const url of cached.urls) expect(url).toMatch(new RegExp(`^${cached.origin}/(assets/[\\w.-]+)?$`))
+
+  await context.setOffline(true)
+  // Proves the browser is really offline: a URL the worker has not cached must fail.
+  expect(await page.evaluate(() => fetch(`./not-cached-${Date.now()}`).then(() => 'ok', () => 'failed'))).toBe('failed')
+  const response = await page.reload()
+  expect(response?.fromServiceWorker()).toBe(true)
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  await page.locator('#password').fill('private-example-password-482!')
+  await expect(page.locator('#score')).not.toBeEmpty()
+})
+
 test('Wi-Fi mode flags passwords that WPA2-Personal does not accept', async ({ page }) => {
   await page.goto('/')
   await page.locator('#wifi').click()

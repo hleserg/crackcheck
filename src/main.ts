@@ -116,3 +116,5 @@ $('hibp-button').addEventListener('click', async () => {
   }
 })
 render()
+// The worker only caches the site's own static files, so later visits open offline.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {})

@@ -25,6 +25,8 @@ During ordinary analysis, the password should remain in the browser's transient 
 
 GitHub Pages does not let the project set HTTP response headers, and a `<meta>` Content-Security-Policy cannot carry `frame-ancestors`. Another site can therefore embed CrackCheck in a frame. The framing page cannot read the password field across origins, but it could overlay misleading UI. The site has no accounts or state-changing actions, so the remaining risk is deception rather than data access. Moving to a host that sets `Content-Security-Policy: frame-ancestors 'none'` would close it.
 
+A service worker keeps the built files for offline opening. If a modified build were ever deployed, returning visitors would keep it until the next deploy replaced it, and a visitor who stays offline keeps the last copy they loaded. The worker handles only same-origin GET requests, and its cache name hashes the built files, so each deploy replaces the old cache on the next visit.
+
 ## Out of scope
 
 CrackCheck cannot protect against malware, a compromised device or browser, hostile extensions, a modified source/build, clipboard managers, shoulder surfing, or someone with access to developer tools. A static host and network providers can see ordinary web request metadata. HIBP receives the five-character hash prefix and network metadata when the user requests a check.
