@@ -37,8 +37,8 @@ export const business: Record<Locale, Chapter> = {
       ] },
       { title: 'Как безопасно передавать доступы подрядчику', items: [
         'Пароль не отправляют в почте, обычном чате и тем более в закреплённом сообщении общей группы: его увидят все участники, и он останется в истории навсегда, в том числе у тех, кто потом покинет чат или сменит работу.',
-        'Логин и пароль — разными каналами и тому, кто будет ими пользоваться. Сразу после входа подрядчик меняет пароль на свой.',
-        'Просите не общий админский логин, а отдельную учётную запись на каждого человека с минимально нужными правами: тогда видно, кто что сделал, и отключить можно одного.',
+        'Лучше всего пароль вообще не передавать. В хостинге, админке сайта, домене и рекламном кабинете почти везде есть «добавить пользователя»: вы приглашаете исполнителя по почте, и он сам задаёт себе пароль. Просите отдельную учётную запись на каждого человека с минимально нужными правами, а не общий админский логин: тогда видно, кто что сделал, и отключить можно одного.',
+        'Если пароль всё же нужно передать, используйте одноразовую ссылку, которая сама истекает после первого открытия, например Bitwarden Send (бесплатно, для текста). Саму ссылку и логин отправляйте разными каналами. Сразу после входа подрядчик меняет пароль на свой.',
         'Включите вход с кодом. Если пароль всё же засветился, одного его уже не хватит.',
         'Когда работа закончена, отключите доступ и смените пароли. А если пароль уже побывал в общем чате, считайте его скомпрометированным: смените и удалите сообщение.',
       ] },
@@ -86,8 +86,8 @@ export const business: Record<Locale, Chapter> = {
       ] },
       { title: 'How to hand over access to a contractor safely', items: [
         'Do not send a password by email, in an ordinary chat, and certainly not as a pinned message in a group: every member sees it, and it stays in the history for good, even for people who later leave the chat or change jobs.',
-        'Send the login and the password through different channels, and only to the person who will use them. The contractor changes the password to their own right after signing in.',
-        'Ask for a separate account for each person with only the rights they need, not a shared admin login: then you can see who did what and switch off one person.',
+        'Best is not to pass a password at all. Hosting, a website admin panel, a domain registrar and an ad account almost always have “add user”: you invite the contractor by email and they set their own password. Ask for a separate account for each person with only the rights they need, not a shared admin login: then you can see who did what and switch off one person.',
+        'If a password must be passed, use a one-time link that expires after the first open, for example Bitwarden Send (free, for text). Send the link and the login through different channels. The contractor changes the password to their own right after signing in.',
         'Turn on sign-in codes. If the password does leak, it is no longer enough on its own.',
         'When the work is done, remove the access and change the passwords. If a password has ever been in a group chat, treat it as compromised: change it and delete the message.',
       ] },
