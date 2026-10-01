@@ -44,8 +44,8 @@ describe('analyze', () => {
     { sample: 'анна2024', detail: 'name', transliterated: true },
     { sample: 'Иван', detail: 'name', transliterated: true },
     { sample: 'йцукен', detail: 'russianKeyboard', transliterated: false },
-    { sample: 'фывапр', detail: 'russianKeyboard', transliterated: false },
-    { sample: 'ячсмит', detail: 'russianKeyboard', transliterated: false },
+    { sample: 'фыва', detail: 'russianKeyboard', transliterated: false },
+    { sample: 'ячсм', detail: 'russianKeyboard', transliterated: false },
   ])('recognizes $sample as $detail', ({ sample, detail, transliterated }) => {
     const result = analyze(sample)
 
