@@ -37,7 +37,8 @@ export const business: Record<Locale, Chapter> = {
       ] },
       { title: 'Как безопасно передавать доступы подрядчику', items: [
         'Пароль не отправляют в почте, обычном чате и тем более в закреплённом сообщении общей группы: его увидят все участники, и он останется в истории навсегда, в том числе у тех, кто потом покинет чат или сменит работу.',
-        'Лучше всего — менеджер паролей с общим хранилищем: подрядчик получает доступ к записи, а не сам пароль, и вы можете отозвать его в один клик.',
+        'Лучше всего — менеджер паролей, где можно выдать конкретному человеку конкретные записи. В Bitwarden это коллекция: вы кладёте в неё нужные доступы и добавляете только этого исполнителя. Каждому человеку из команды подрядчика — свой аккаунт, а не один на всех: тогда одного можно отключить, не трогая остальных. Только в Bitwarden есть уровень «пароли скрыты»: исполнитель входит через автозаполнение, но не может показать или скопировать пароль. Он защищает от случайной утечки (пароль не уйдёт в чат), а не от умышленного копирования. Работает там, где есть форма входа в браузере.',
+        'Отзыв доступа закрывает запись, но уже увиденный пароль человек мог запомнить или скопировать. Поэтому после работы пароль всё равно меняют.',
         'Если менеджера нет: логин и пароль — разными каналами и тому, кто будет ими пользоваться. Сразу после входа подрядчик меняет пароль на свой.',
         'Просите не общий админский логин, а отдельную учётную запись на каждого человека с минимально нужными правами: тогда видно, кто что сделал, и отключить можно одного.',
         'Включите вход с кодом. Если пароль всё же засветился, одного его уже не хватит.',
@@ -87,7 +88,8 @@ export const business: Record<Locale, Chapter> = {
       ] },
       { title: 'How to hand over access to a contractor safely', items: [
         'Do not send a password by email, in an ordinary chat, and certainly not as a pinned message in a group: every member sees it, and it stays in the history for good, even for people who later leave the chat or change jobs.',
-        'Best is a password manager with a shared vault: the contractor gets access to an entry rather than the password itself, and you can revoke it in one click.',
+        'Best is a password manager where you can give a specific person specific entries. In Bitwarden that is a collection: you put the needed accesses in it and add only that person. Each person on the contractor’s team gets their own account, not one for everybody: then you can switch one off without touching the rest. Only Bitwarden has a “passwords hidden” level: the person signs in through autofill but cannot show or copy the password. It protects against accidental leaks (the password will not end up in a chat), not against deliberate copying. It works where there is a sign-in form in the browser.',
+        'Revoking access closes the entry, but a person may have memorized or copied a password they already saw. So change the password after the work anyway.',
         'Without a manager: send the login and the password through different channels, and only to the person who will use them. The contractor changes the password to their own right after signing in.',
         'Ask for a separate account for each person with only the rights they need, not a shared admin login: then you can see who did what and switch off one person.',
         'Turn on sign-in codes. If the password does leak, it is no longer enough on its own.',
