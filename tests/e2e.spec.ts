@@ -143,6 +143,15 @@ test('the generator builds random passwords locally and compares character sets'
   expect(requests).toEqual([])
 })
 
+test('long crack times stay inside the card on a narrow screen', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 })
+  await page.goto('/')
+  await page.locator('#account').click()
+  await page.locator('#gen-length').fill('30')
+  await expect(page.locator('#gen-time-offline')).toContainText(/триллиона/)
+  expect(await page.evaluate(() => [...document.querySelectorAll('.generator dd')].every(dd => dd.getBoundingClientRect().right <= dd.closest('.generator')!.getBoundingClientRect().right))).toBe(true)
+})
+
 test('explains Russian typed with the English layout', async ({ page }) => {
   await page.goto('/')
   await page.locator('#password').fill('ctvmz')

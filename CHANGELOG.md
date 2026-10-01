@@ -32,3 +32,4 @@ Not released yet. This file will record user-visible changes beginning with the 
 - Show crack times over a century in compact years (for example, "4 млрд лет") and cap them at "over a trillion years".
 - Show four crack-time rows in order of danger (leaked database, no protection, basic, proper) and cite a 2018 study of login rate limiting.
 - Move the three essential rules above the explanation and add a FAQ on saving the Wi‑Fi password in a password manager.
+- Keep long crack times such as "more than a trillion years" inside the card on narrow screens.
