@@ -107,14 +107,16 @@ test('a returning visit opens without a network and caches only static files', a
 
 test('Wi-Fi mode flags passwords that WPA2-Personal does not accept', async ({ page }) => {
   await page.goto('/')
-  await page.locator('#wifi').click()
+  await expect(page.locator('#wifi')).toHaveAttribute('aria-pressed', 'true')
   await page.locator('#password').fill('short')
   await expect(page.locator('#wifi-format')).toBeVisible()
   await page.locator('#password').fill('long-enough-ascii')
   await expect(page.locator('#wifi-format')).toBeHidden()
+  await expect(page.locator('.times dt:visible')).toHaveText([/Wi‑Fi/])
   await page.locator('#account').click()
   await page.locator('#password').fill('short')
   await expect(page.locator('#wifi-format')).toBeHidden()
+  await expect(page.locator('.times dt:visible')).toHaveText([/без защиты/, /с защитой/, /Утекла база/])
 })
 
 test('explains Russian typed with the English layout', async ({ page }) => {

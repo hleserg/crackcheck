@@ -14,6 +14,7 @@ Not released yet. This file will record user-visible changes beginning with the 
 - Show two checks a visitor can do without trusting the site: enter a similar password instead of the real one, or use airplane mode and close the tab.
 - Fix the password panel being cut off on the right on phones.
 - Show a new version of the site on the next load instead of serving the cached page first.
+- Open in Wi‑Fi mode, and show the site crack time both without and with brute-force protection.
 - Add a short plan for people who reuse a few passwords everywhere: built-in password manager, email first, then accounts with money, reset the rest on next sign-in.
 - Answer common doubts in plain words: what if the manager is hacked or hands passwords to the authorities, a lost phone or forgotten main password, a paper notebook, "who would want me", sign-in codes, a phone in someone else's hands.
 - Open in Russian by default, whatever the browser language; English is one click away.
