@@ -154,6 +154,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await page.locator('#password').fill('password')
     await page.locator('#wifi').click()
     await page.locator('#hibp-status').evaluate(node => { node.textContent = 'status' })
+    await page.locator('.faq details').evaluateAll(items => items.forEach(item => { (item as HTMLDetailsElement).open = true }))
     expect([...emptyState, ...await lowContrastText()]).toEqual([])
   })
 }
