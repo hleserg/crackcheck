@@ -17,11 +17,22 @@ This status record is based on [`RESEARCH.md`](../RESEARCH.md) plus inspection o
 ## Current claims
 
 - The UI has Russian and English translations, and the app imports official `@zxcvbn-ts/language-ru@4.1.0` dictionary data. Its major dictionaries are Latin transliterations, so raw Cyrillic words need CrackCheck's additional candidate analysis. This does not imply complete or independently validated Russian password-dictionary coverage.
-- App-level transliteration candidate analysis requires every Cyrillic run to have at least four letters and an exact match in the ranked `commonWords-ru` list, then selects the candidate only if zxcvbn-ts estimates fewer guesses. This is a limited heuristic, not a general reverse-layout or transliteration matcher.
+- App-level transliteration candidate analysis requires every Cyrillic run to have at least four letters and an exact match in the ranked `commonWords-ru` list, then selects the candidate only if zxcvbn-ts estimates fewer guesses. The same rule applies to Latin key runs read as Russian typed with the English layout, excluding runs that are English dictionary words or names. This is a limited heuristic, not a general reverse-layout or transliteration matcher.
 - The official Russian package README links its first-name and surname generators to Turkish FakerJS locale files, but the upstream generator at [the package's source revision](https://github.com/zxcvbn-ts/zxcvbn/blob/642ef8f0c40d8267e9fc2d4de29ab2691e87a10e/data-scripts/lists.ts#L565-L585) uses the corresponding Russian locale files. This resolves the language mismatch. FakerJS is MIT-licensed, but the generator does not pin a Faker revision; these lists are not population-ranked and are excluded from scoring.
 - The app contains a local JCUKEN graph in `src/russianGraph.json`, generated from upstream `zxcvbn-ts/zxcvbn` commit `5782aa3`. The official `language-ru@4.1.0` README setup uses `language-common` adjacency graphs and does not establish that a Russian graph ships in the npm package. CrackCheck's generated graph is not evidence of an upstream npm feature or acceptance.
 - `rustemgareev` names/surnames listed above are alternative candidates only and are not declared to be present in the application.
-- Russian words typed using an English keyboard layout (reverse-layout transliteration) and mixed Cyrillic/Latin homoglyphs are recognized research goals, not a claim of current matcher support.
+- Reverse-layout matching covers only whole runs that are ranked `commonWords-ru` words. Mixed Cyrillic/Latin homoglyphs remain a research goal, not a claim of current matcher support.
 - Never add raw leaked password corpora. Published aggregate findings may inform matcher design, but do not redistribute leaked credentials.
 
 Upstream [PR #346](https://github.com/zxcvbn-ts/zxcvbn/pull/346) proposes pinning FakerJS revision `3b184d6e52a721c227c6e9c58731bdf008f43532` and adding the missing ODC-BY/Faker notices. It has not been merged. The optional `wikipedia-en` and `wikipedia-ru` lists are excluded from the application bundle pending provenance and license review.
+
+### Wikipedia list audit (2026-10-01)
+
+Findings from upstream `zxcvbn-ts/zxcvbn` at the PR #345 base and the installed npm packages:
+
+- The lists are produced by `data-scripts/wikiExtractor/index.ts`. Upstream's language guide (`docs/guide/languages/README.md`) describes the process: download `XXwiki-latest-pages-articles.xml.bz2` from dumps.wikimedia.org, extract it with `wikiextractor --no-templates`, then count tokens. The generator keeps tokens seen at least 500 times and writes them ordered by frequency. The JSON contains words only; counts and article text are not shipped.
+- The dump date is not recorded. `wikipedia-en` has 29,782 entries and was added before 2021-05-25. `wikipedia-ru` has 85,667 entries and was added on 2026-08-12 in upstream commit `ac0ef46`. The npm files are byte-identical to the upstream source.
+- `wikipedia-ru` contains no Cyrillic. It is a Latin transliteration, like the other Russian lists, and its top entries include wiki markup tokens such as `doc`, `https`, `url` and `title`.
+- No README, NOTICE or THIRD_PARTY_LICENSES file in `language-en@4.1.1` or `language-ru@4.1.0` mentions Wikipedia or its CC BY-SA 4.0/GFDL text license. `language-ru` ships no notice file at all.
+
+These lists do not reproduce article text, but the dump revision, Wikimedia attribution and the license reasoning are undocumented upstream. The exclusion stays. To include them, the project would need a documented dump revision and a recorded decision on attribution, ideally upstream. The noise tokens are a second, quality-related reason to keep `wikipedia-ru` out.

@@ -93,6 +93,12 @@ test('Wi-Fi mode flags passwords that WPA2-Personal does not accept', async ({ p
   await expect(page.locator('#wifi-format')).toBeHidden()
 })
 
+test('explains Russian typed with the English layout', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('#password').fill('ctvmz')
+  await expect(page.locator('#translit-note')).toContainText('English keyboard layout')
+})
+
 for (const colorScheme of ['light', 'dark'] as const) {
   test(`visible text meets WCAG AA contrast in ${colorScheme} mode`, async ({ page }) => {
     await page.emulateMedia({ colorScheme })

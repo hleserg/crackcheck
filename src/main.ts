@@ -71,7 +71,7 @@ function render() {
   $<HTMLElement>('meter-fill').style.width = `${(result.score + 1) * 20}%`
   $<HTMLElement>('meter-fill').dataset.score = String(result.score)
   $('translit-note').hidden = !result.transliterated
-  setText('translit-note', t.translitNote)
+  setText('translit-note', result.layoutSwapped ? t.layoutNote : t.translitNote)
   // IEEE 802.11i: a WPA2-Personal passphrase is 8–63 printable ASCII characters.
   $('wifi-format').hidden = mode !== 'wifi' || /^[\x20-\x7e]{8,63}$/.test(passwordInput.value)
   setText('wifi-format', t.wifiFormat)

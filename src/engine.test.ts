@@ -67,6 +67,23 @@ describe('analyze', () => {
     expect(pattern?.variants).toEqual(variants)
   })
 
+  it.each(['ctvmz', 'ktyf', 'rhfcbdsq', 'ghbdtn2024'])('recognizes %s as Russian typed with the English layout', sample => {
+    const result = analyze(sample)
+
+    expect(result?.layoutSwapped).toBe(true)
+    expect(result?.transliterated).toBe(true)
+    expect(result?.guesses).toBeLessThan(fullFactory.check(sample).guesses)
+  })
+
+  it.each(['here', 'keys', 'emma', 'Ahern', 'qwerty', 'vbhzrth', 'xmen'])('does not read %s as a layout-swapped Russian word', sample => {
+    expect(analyze(sample)?.layoutSwapped).toBe(false)
+  })
+
+  it('recognizes Russian adjectives ending in -ый', () => {
+    expect(transliterate('красивый')).toBe('krasiviy')
+    expect(analyze('красивый')?.transliterated).toBe(true)
+  })
+
   it('keeps the official Russian package ranks when analyzing a Cyrillic word', () => {
     const sample = 'пароль'
     const englishOnly = commonEnglishFactory.check(transliterate(sample))

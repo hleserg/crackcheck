@@ -15,10 +15,21 @@ const factory = new ZxcvbnFactory({
 const rankedRussianWords = new Set(russianCommonWords)
 const russianNames = new Set(russianFirstnames)
 const russianSurnames = new Set(russianLastnames)
+const englishWords = new Set([
+  ...languageDictionary['commonWords-en'], ...languageDictionary['firstnames-en'], ...languageDictionary['lastnames-en'],
+])
+
+// Keys of the US QWERTY layout and the characters they produce in Russian JCUKEN.
+const latinKeys = 'qwertyuiop[]asdfghjkl;\'zxcvbnm,.`QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>~'
+const russianKeys = 'йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ'
+const layout = Object.fromEntries(Array.from(latinKeys, (key, index) => [key, russianKeys[index]]))
+export function fromEnglishLayout(value: string): string {
+  return Array.from(value, char => layout[char] ?? char).join('')
+}
 
 export type Variant = 'reversed' | 'l33t'
 export type Pattern = { kind: string; length: number | null; detail: string; variants: Variant[] }
-export type Analysis = { score: number; guesses: number; patterns: Pattern[]; transliterated: boolean }
+export type Analysis = { score: number; guesses: number; patterns: Pattern[]; transliterated: boolean; layoutSwapped: boolean }
 
 const translit: Record<string, string> = {
   а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y',
@@ -26,7 +37,16 @@ const translit: Record<string, string> = {
   х: 'kh', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'shch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
 }
 export function transliterate(value: string): string {
-  return Array.from(value.toLowerCase(), char => translit[char] ?? char).join('')
+  // commonWords-ru spells adjective endings -ый as -iy (krasiviy, noviy).
+  return Array.from(value.toLowerCase().replace(/ый/g, 'ий'), char => translit[char] ?? char).join('')
+}
+
+// Each Cyrillic run must be a ranked Russian word of at least four letters.
+// The spelling and length guards reject runs that only collide after
+// transliteration drops soft and hard signs (xmen -> чьут -> chut).
+function isRankedRussianRun(run: string): boolean {
+  const word = transliterate(run)
+  return run.length >= 4 && word.length >= 4 && !/^[ьъы]|ь[аыуэ]|ъ([^еёюя]|$)/iu.test(run) && rankedRussianWords.has(word)
 }
 
 function description(match: MatchExtended): string {
@@ -54,18 +74,21 @@ function description(match: MatchExtended): string {
 export function analyze(password: string): Analysis | null {
   if (!password) return null
   const direct = factory.check(password)
-  const cyrillicRuns = Array.from(password.matchAll(/[а-яё]+/giu), match => match[0])
-  const transformed = cyrillicRuns.some(run => run.length >= 4) ? transliterate(password) : null
-  const hasRussianDictionaryEvidence = transformed !== null && cyrillicRuns.every(run => {
-    const word = transliterate(run)
-    return run.length >= 4 && rankedRussianWords.has(word)
-  })
-  const candidate = transformed && hasRussianDictionaryEvidence ? factory.check(transformed) : null
-  const transliterated = !!candidate && hasRussianDictionaryEvidence && candidate.guesses < direct.guesses
+  // Without Cyrillic input, try reading Latin key runs as Russian typed with the
+  // wrong layout (ghbdtn -> привет), skipping runs that are English words.
+  const keyRuns = Array.from(password.matchAll(/[a-z[\];',.`{}:"<>~]+/gi), match => match[0])
+  const layoutSwapped = !/[а-яё]/iu.test(password) && keyRuns.length > 0
+    && keyRuns.every(run => !englishWords.has(run.toLowerCase()) && isRankedRussianRun(fromEnglishLayout(run)))
+  const russian = layoutSwapped ? fromEnglishLayout(password) : password
+  const cyrillicRuns = Array.from(russian.matchAll(/[а-яё]+/giu), match => match[0])
+  const hasRussianDictionaryEvidence = cyrillicRuns.length > 0 && cyrillicRuns.every(isRankedRussianRun)
+  const candidate = hasRussianDictionaryEvidence ? factory.check(transliterate(russian)) : null
+  const transliterated = !!candidate && candidate.guesses < direct.guesses
   const result = transliterated ? candidate : direct
   return {
     score: result.score,
     transliterated,
+    layoutSwapped: transliterated && layoutSwapped,
     guesses: result.guesses,
     patterns: result.sequence.map(match => ({
       kind: match.pattern,
