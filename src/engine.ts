@@ -16,7 +16,8 @@ const rankedRussianWords = new Set(russianCommonWords)
 const russianNames = new Set(russianFirstnames)
 const russianSurnames = new Set(russianLastnames)
 
-export type Pattern = { kind: string; length: number | null; detail: string }
+export type Variant = 'reversed' | 'l33t'
+export type Pattern = { kind: string; length: number | null; detail: string; variants: Variant[] }
 export type Analysis = { score: number; guesses: number; patterns: Pattern[]; transliterated: boolean }
 
 const translit: Record<string, string> = {
@@ -46,6 +47,7 @@ function description(match: MatchExtended): string {
   if (match.pattern === 'sequence') return 'sequence'
   if (match.pattern === 'regex') return 'year'
   if (match.pattern === 'wordSequence') return 'words'
+  if (match.pattern === 'separator') return 'separator'
   return 'unrecognized'
 }
 
@@ -69,6 +71,9 @@ export function analyze(password: string): Analysis | null {
       kind: match.pattern,
       length: transliterated ? null : Array.from(match.token).length,
       detail: description(match),
+      variants: match.pattern === 'dictionary'
+        ? (['reversed', 'l33t'] as const).filter(variant => match[variant])
+        : [],
     })),
   }
 }

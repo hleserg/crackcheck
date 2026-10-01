@@ -8,21 +8,22 @@ CrackCheck is an early-stage project. This roadmap distinguishes the deployed ap
 - `zxcvbn-ts` analysis using common, English, and official Russian package dictionaries.
 - JCUKEN graph in `src/russianGraph.json`, generated from upstream commit `5782aa3` and integrated locally.
 - Transliteration candidate analysis requires exact `commonWords-ru` evidence for every Cyrillic run of at least four letters, and selects a lower zxcvbn-ts estimate.
-- Account and educational WPA2-Personal modes.
+- Account and educational WPA2-Personal modes; the Wi‑Fi mode notes when a password falls outside the WPA2-Personal passphrase format (8–63 printable ASCII characters).
+- Pattern explanations name separators and mark dictionary matches found reversed or with l33t substitutions.
 - Separate, user-triggered HIBP Pwned Passwords range check.
 
 These are implementation facts, not a claim that the current build has passed an independent security review. The application is deployed at https://hleserg.github.io/crackcheck/.
 
 ## Release checks completed
 
-- Typecheck, lint, 12 unit tests, 3 browser tests, and production build passed locally and in CI.
-- Browser tests verified that local input sends no network requests after load and leaves no password in persistent storage, URL, or rendered page text.
+- Typecheck, lint, 19 unit tests, 7 browser tests, and production build pass locally; CI runs the same commands.
+- Browser tests verify that local input sends no network requests after load and leaves no password in persistent storage, URL, or rendered page text; that analysis still works with the network switched off after load; the Wi‑Fi format note; and WCAG AA text contrast in light and dark color schemes.
 - GitHub Pages is live at https://hleserg.github.io/crackcheck/.
 
 ## Next priorities
 
 - Follow [upstream PR #346](https://github.com/zxcvbn-ts/zxcvbn/pull/346) for the ODC-BY/Faker notices and pinned source revision; audit the optional Wikipedia-derived lists separately.
-- Review score explanations and translations for accuracy and accessibility on keyboard, mobile, and dark/light themes.
+- Continue reviewing score explanations and translations for accuracy, and check keyboard and mobile use by hand. Text contrast in both color schemes is covered by a browser test.
 
 ## Later work
 

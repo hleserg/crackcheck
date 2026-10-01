@@ -1,7 +1,7 @@
 export type Locale = 'ru' | 'en'
 export const strings = {
   ru: {
-    eyebrow: 'АНАЛИЗ ПАРОЛЯ', title: 'Посмотри, как будут угадывать твой пароль.',
+    eyebrow: 'АНАЛИЗ ПАРОЛЯ', title: 'Посмотрите, как могут угадывать ваш пароль.',
     subtitle: 'Алгоритм ищет знакомые слова, даты, повторения и пути по клавиатуре. Ввод остаётся в браузере.',
     password: 'Ваш пароль', placeholder: 'Введите пароль для разбора', show: 'Показать', hide: 'Скрыть', clear: 'Очистить',
     local: 'Только локально', hibpReady: 'HIBP — по нажатию', privacy: 'Проверка выполняется в вашем браузере. Мы не сохраняем и не отправляем пароль.',
@@ -14,7 +14,10 @@ export const strings = {
     learnTitle: 'Почему это важно', learn1: 'Длина помогает, когда символы непредсказуемы. Имя с годом остаётся шаблоном.', learn2: 'Повторное использование связывает разные аккаунты: одна утечка угрожает всем.', learn3: 'Менеджер паролей создаёт и хранит отдельный случайный пароль для каждого сайта.',
     dataNotices: 'Лицензии данных', methodology: 'Методология и источники', privacyLink: 'Как мы защищаем пароль',
     score: ['Очень предсказуемый', 'Предсказуемый', 'Есть узнаваемые шаблоны', 'Сложнее угадать', 'Сложно угадать по известным шаблонам'],
-    details: { russianWord: 'Русское слово или пример', name: 'Имя', surname: 'Фамилия', commonPassword: 'Частый пароль', word: 'Словарное слово', russianKeyboard: 'Путь по ЙЦУКЕН', keyboard: 'Путь по клавиатуре', date: 'Дата', repeat: 'Повторение', sequence: 'Последовательность', year: 'Год', words: 'Ряд слов', unrecognized: 'Нераспознанный фрагмент' },
+    details: { russianWord: 'Русское слово', name: 'Имя', surname: 'Фамилия', commonPassword: 'Частый пароль', word: 'Словарное слово', russianKeyboard: 'Путь по ЙЦУКЕН', keyboard: 'Путь по клавиатуре', date: 'Дата', repeat: 'Повторение', sequence: 'Последовательность', year: 'Год', words: 'Ряд слов', separator: 'Разделитель', unrecognized: 'Нераспознанный фрагмент' },
+    wifiFormat: 'По стандарту пароль WPA2-Personal — от 8 до 63 печатных символов ASCII (латиница, цифры, знаки). Этот пароль под правило не подходит: роутер может его не принять.',
+    variants: { reversed: 'задом наперёд', l33t: 'с заменой букв на цифры или символы' },
+    homeLabel: 'CrackCheck — на главную', localeLabel: 'Switch to English', workspaceLabel: 'Анализ пароля', scenarioLabel: 'Сценарий анализа',
   },
   en: {
     eyebrow: 'PASSWORD ANALYSIS', title: 'See how someone might guess your password.',
@@ -30,6 +33,9 @@ export const strings = {
     learnTitle: 'Why it matters', learn1: 'Length helps when characters are unpredictable. A name plus a year is still a pattern.', learn2: 'Reuse links accounts: one breach can put them all at risk.', learn3: 'A password manager creates and keeps a separate random password for each site.',
     dataNotices: 'Data licenses', methodology: 'Methodology and sources', privacyLink: 'How we protect your password',
     score: ['Highly predictable', 'Predictable', 'Recognizable patterns', 'Harder to guess', 'Hard to guess from known patterns'],
-    details: { russianWord: 'Russian word or example', name: 'First name', surname: 'Surname', commonPassword: 'Common password', word: 'Dictionary word', russianKeyboard: 'JCUKEN keyboard path', keyboard: 'Keyboard path', date: 'Date', repeat: 'Repeat', sequence: 'Sequence', year: 'Year', words: 'Word sequence', unrecognized: 'Unrecognized segment' },
+    details: { russianWord: 'Russian word', name: 'First name', surname: 'Surname', commonPassword: 'Common password', word: 'Dictionary word', russianKeyboard: 'JCUKEN keyboard path', keyboard: 'Keyboard path', date: 'Date', repeat: 'Repeat', sequence: 'Sequence', year: 'Year', words: 'Word sequence', separator: 'Separator', unrecognized: 'Unrecognized segment' },
+    wifiFormat: 'By the standard, a WPA2-Personal passphrase is 8 to 63 printable ASCII characters (Latin letters, digits, symbols). This password does not fit that rule, so a router may reject it.',
+    variants: { reversed: 'reversed', l33t: 'with letters swapped for digits or symbols' },
+    homeLabel: 'CrackCheck home', localeLabel: 'Переключить на русский', workspaceLabel: 'Password analysis', scenarioLabel: 'Analysis scenario',
   },
 } as const

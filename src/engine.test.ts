@@ -44,6 +44,8 @@ describe('analyze', () => {
     { sample: 'анна2024', detail: 'name', transliterated: true },
     { sample: 'Иван', detail: 'name', transliterated: true },
     { sample: 'йцукен', detail: 'russianKeyboard', transliterated: false },
+    { sample: 'фывапр', detail: 'russianKeyboard', transliterated: false },
+    { sample: 'ячсмит', detail: 'russianKeyboard', transliterated: false },
   ])('recognizes $sample as $detail', ({ sample, detail, transliterated }) => {
     const result = analyze(sample)
 
@@ -53,6 +55,16 @@ describe('analyze', () => {
     if (['пароль123', 'Сергей1988', 'анна2024'].includes(sample)) {
       expect(result?.score).toBeLessThanOrEqual(2)
     }
+  })
+
+  it.each([
+    { sample: 'drowssap', detail: 'commonPassword', variants: ['reversed'] },
+    { sample: 'p@ssw0rd', detail: 'commonPassword', variants: ['l33t'] },
+    { sample: 'Sandpaper-Lantern-Voyage-Orchid', detail: 'separator', variants: [] },
+  ])('explains $sample as $detail with variants $variants', ({ sample, detail, variants }) => {
+    const pattern = analyze(sample)?.patterns.find(pattern => pattern.detail === detail)
+
+    expect(pattern?.variants).toEqual(variants)
   })
 
   it('keeps the official Russian package ranks when analyzing a Cyrillic word', () => {

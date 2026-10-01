@@ -21,6 +21,10 @@ During ordinary analysis, the password should remain in the browser's transient 
 - Dictionary updates introduce data with unclear provenance or incompatible redistribution terms.
 - Untrusted text is inserted into the page as HTML rather than rendered as text.
 
+## Known limitations
+
+GitHub Pages does not let the project set HTTP response headers, and a `<meta>` Content-Security-Policy cannot carry `frame-ancestors`. Another site can therefore embed CrackCheck in a frame. The framing page cannot read the password field across origins, but it could overlay misleading UI. The site has no accounts or state-changing actions, so the remaining risk is deception rather than data access. Moving to a host that sets `Content-Security-Policy: frame-ancestors 'none'` would close it.
+
 ## Out of scope
 
 CrackCheck cannot protect against malware, a compromised device or browser, hostile extensions, a modified source/build, clipboard managers, shoulder surfing, or someone with access to developer tools. A static host and network providers can see ordinary web request metadata. HIBP receives the five-character hash prefix and network metadata when the user requests a check.

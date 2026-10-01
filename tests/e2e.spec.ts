@@ -71,3 +71,61 @@ test('HIBP sends a five-character hash prefix only after explicit opt-in', async
   expect(externalRequests[0]!.url).not.toContain('1E4C9B93F3F0682250B6CF8331B7EE68FD8')
   await expect(page.locator('#hibp-status')).toContainText(/no match|совпадений не найдено/i)
 })
+
+test('analysis works offline after the page has loaded', async ({ page, context }) => {
+  await page.goto('/')
+  await page.waitForLoadState('networkidle')
+  await context.setOffline(true)
+  await page.locator('#password').fill('Сергей1988')
+  await expect(page.locator('#patterns li').first()).toBeVisible()
+  await expect(page.locator('#score')).not.toBeEmpty()
+})
+
+test('Wi-Fi mode flags passwords that WPA2-Personal does not accept', async ({ page }) => {
+  await page.goto('/')
+  await page.locator('#wifi').click()
+  await page.locator('#password').fill('short')
+  await expect(page.locator('#wifi-format')).toBeVisible()
+  await page.locator('#password').fill('long-enough-ascii')
+  await expect(page.locator('#wifi-format')).toBeHidden()
+  await page.locator('#account').click()
+  await page.locator('#password').fill('short')
+  await expect(page.locator('#wifi-format')).toBeHidden()
+})
+
+for (const colorScheme of ['light', 'dark'] as const) {
+  test(`visible text meets WCAG AA contrast in ${colorScheme} mode`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme })
+    await page.goto('/')
+    const lowContrastText = () => page.evaluate(() => {
+      const rgb = (value: string) => value.match(/[\d.]+/g)!.map(Number)
+      const luminance = ([r, g, b]: number[]) => {
+        const [R, G, B] = [r, g, b].map(c => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4 })
+        return 0.2126 * R! + 0.7152 * G! + 0.0722 * B!
+      }
+      const background = (element: Element | null): number[] => {
+        for (; element; element = element.parentElement) {
+          const color = rgb(getComputedStyle(element).backgroundColor)
+          if (color[3] !== 0) return color
+        }
+        return rgb(getComputedStyle(document.documentElement).backgroundColor)
+      }
+      const result: string[] = []
+      for (const element of document.querySelectorAll('body *')) {
+        const own = Array.from(element.childNodes).some(node => node.nodeType === Node.TEXT_NODE && node.textContent!.trim())
+        if (!own || !(element as HTMLElement).checkVisibility() || (element as HTMLButtonElement).disabled) continue
+        const style = getComputedStyle(element)
+        const [l1, l2] = [luminance(rgb(style.color)), luminance(background(element))].sort((a, b) => b - a)
+        const ratio = (l1! + 0.05) / (l2! + 0.05)
+        const large = parseFloat(style.fontSize) >= 24 || (parseFloat(style.fontSize) >= 18.66 && Number(style.fontWeight) >= 700)
+        if (ratio < (large ? 3 : 4.5)) result.push(`${element.id || element.className || element.tagName}: ${ratio.toFixed(2)}`)
+      }
+      return result
+    })
+    const emptyState = await lowContrastText()
+    await page.locator('#password').fill('password')
+    await page.locator('#wifi').click()
+    await page.locator('#hibp-status').evaluate(node => { node.textContent = 'status' })
+    expect([...emptyState, ...await lowContrastText()]).toEqual([])
+  })
+}

@@ -6,16 +6,16 @@ import { strings, type Locale } from './i18n'
 const app = document.querySelector<HTMLDivElement>('#app')!
 app.innerHTML = `
   <div class="shell">
-    <header class="topbar"><a class="brand" href="#top" aria-label="CrackCheck home"><span class="brand-mark">C<span>•</span></span><span>CrackCheck</span></a><button id="locale" class="small-button" type="button" aria-label="Switch language">EN</button></header>
+    <header class="topbar"><a class="brand" id="home" href="#top"><span class="brand-mark">C<span>•</span></span><span>CrackCheck</span></a><button id="locale" class="small-button" type="button">EN</button></header>
     <main id="top">
       <section class="hero" aria-labelledby="title"><p class="eyebrow" id="eyebrow"></p><h1 id="title"></h1><p class="lead" id="subtitle"></p></section>
-      <section class="workspace" aria-label="Password analysis">
+      <section class="workspace" id="workspace">
         <div class="entry"><div class="entry-head"><label for="password" id="password-label"></label><span class="privacy-badge"><span class="badge-dot"></span><span id="local"></span></span></div>
-          <div class="input-row"><input id="password" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="text" /><button id="show" class="input-button" type="button"></button><button id="clear" class="input-button" type="button"></button></div>
-          <p class="privacy-note" id="privacy"></p><div class="mode-row"><span id="mode-label"></span><div class="segmented" role="group" aria-label="Analysis scenario"><button id="account" type="button" aria-pressed="true"></button><button id="wifi" type="button" aria-pressed="false"></button></div></div>
+          <div class="input-row"><input id="password" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text" /><button id="show" class="input-button" type="button"></button><button id="clear" class="input-button" type="button"></button></div>
+          <p class="privacy-note" id="privacy"></p><div class="mode-row"><span id="mode-label"></span><div class="segmented" id="scenario" role="group"><button id="account" type="button" aria-pressed="true"></button><button id="wifi" type="button" aria-pressed="false"></button></div></div>
         </div>
         <div id="wifi-explanation" class="wifi-note" hidden></div>
-        <div class="analysis" id="analysis"><p class="empty" id="empty"></p><div id="result" hidden><div class="result-head"><div><span class="section-kicker" id="result-label"></span><h2 id="score"></h2></div><div class="score-index" id="score-index"></div></div><div class="meter" aria-hidden="true"><span id="meter-fill"></span></div><div class="guess-row"><div><span class="section-kicker" id="guesses-label"></span><p class="guesses" id="guesses"></p></div></div><p class="model" id="model"></p><p class="model" id="translit-note" hidden></p><div class="divider"></div><h3 id="seen"></h3><ol class="patterns" id="patterns"></ol><div class="advice"><h3 id="suggestion"></h3><p id="advice-text"></p></div></div></div>
+        <div class="analysis" id="analysis"><p class="empty" id="empty"></p><div id="result" hidden><div class="result-head"><div><span class="section-kicker" id="result-label"></span><h2 id="score"></h2></div><div class="score-index" id="score-index"></div></div><div class="meter" aria-hidden="true"><span id="meter-fill"></span></div><div class="guess-row"><div><span class="section-kicker" id="guesses-label"></span><p class="guesses" id="guesses"></p></div></div><p class="model" id="model"></p><p class="model" id="translit-note" hidden></p><p class="model" id="wifi-format" hidden></p><div class="divider"></div><h3 id="seen"></h3><ol class="patterns" id="patterns"></ol><div class="advice"><h3 id="suggestion"></h3><p id="advice-text"></p></div></div></div>
       </section>
       <section class="hibp-section"><div><span class="section-kicker">OPT-IN · HIBP</span><h2 id="hibp-title"></h2><p id="hibp-text"></p></div><div class="hibp-actions"><label class="network-switch"><input id="network-off" type="checkbox" checked /><span id="network-off-label"></span></label><button class="primary-button" id="hibp-button" type="button"></button><p id="hibp-status" role="status" aria-live="polite"></p></div></section>
       <section class="learn"><span class="section-kicker">CRACKCHECK / 01</span><h2 id="learn-title"></h2><div class="learn-grid"><p id="learn1"></p><p id="learn2"></p><p id="learn3"></p></div></section>
@@ -55,6 +55,9 @@ function render() {
   $('show').textContent = passwordInput.type === 'password' ? t.show : t.hide
   $('clear').textContent = t.clear
   $('locale').textContent = locale === 'ru' ? 'EN' : 'RU'
+  $('locale').lang = locale === 'ru' ? 'en' : 'ru'
+  const ariaLabels = { home: t.homeLabel, locale: t.localeLabel, workspace: t.workspaceLabel, scenario: t.scenarioLabel }
+  for (const [id, value] of Object.entries(ariaLabels)) $(id).setAttribute('aria-label', value)
   $('wifi-explanation').hidden = mode !== 'wifi'
   $('account').setAttribute('aria-pressed', String(mode === 'account'))
   $('wifi').setAttribute('aria-pressed', String(mode === 'wifi'))
@@ -69,13 +72,16 @@ function render() {
   $<HTMLElement>('meter-fill').dataset.score = String(result.score)
   $('translit-note').hidden = !result.transliterated
   setText('translit-note', t.translitNote)
+  // IEEE 802.11i: a WPA2-Personal passphrase is 8–63 printable ASCII characters.
+  $('wifi-format').hidden = mode !== 'wifi' || /^[\x20-\x7e]{8,63}$/.test(passwordInput.value)
+  setText('wifi-format', t.wifiFormat)
   setText('guesses', new Intl.NumberFormat(locale).format(Math.round(result.guesses)))
   const list = $('patterns')
   list.replaceChildren()
   for (const pattern of result.patterns) {
     const item = document.createElement('li')
     const label = document.createElement('strong')
-    label.textContent = t.details[pattern.detail as keyof typeof t.details] || t.details.unrecognized
+    label.textContent = [t.details[pattern.detail as keyof typeof t.details] || t.details.unrecognized, ...pattern.variants.map(variant => t.variants[variant])].join(', ')
     const length = document.createElement('span')
     length.textContent = pattern.length === null ? '' : `${pattern.length} ${t.chars}`
     item.append(label, length)

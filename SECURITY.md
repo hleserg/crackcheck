@@ -21,4 +21,4 @@ When a private contact is added, this section should be updated with its verifie
 
 ## Supported versions
 
-There are no published releases yet. Security fixes are made against the current default branch; support for older builds is not promised until a release policy is established.
+There are no versioned releases yet. The site at https://hleserg.github.io/crackcheck/ is deployed continuously from the default branch, and security fixes are made there. Support for older builds is not promised until a release policy is established.

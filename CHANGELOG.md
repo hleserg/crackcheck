@@ -5,3 +5,6 @@ Not released yet. This file will record user-visible changes beginning with the 
 ## Unreleased
 
 - Initialize project documentation and repository metadata.
+- Explain separators and reversed or l33t dictionary matches instead of labeling them unrecognized.
+- Note in Wi‑Fi mode when a password is outside the WPA2-Personal passphrase format (8–63 printable ASCII characters).
+- Fix text contrast in dark mode and localize accessible labels.
