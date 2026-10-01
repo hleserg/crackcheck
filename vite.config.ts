@@ -32,8 +32,10 @@ self.addEventListener('fetch', event => {
   const request = event.request
   if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return
   // ponytail: the page is cache-first too, so a deploy shows on the second visit; make navigations network-first if that lag matters
-  const key = request.mode === 'navigate' ? URLS[0] : request
-  event.respondWith(caches.open(CACHE).then(cache => cache.match(key, { ignoreVary: true })).then(cached => cached || fetch(request)))
+  // Navigations ignore the query string; a page URL the cache does not know (./?x, ./#y) falls back to the main page.
+  event.respondWith(caches.open(CACHE).then(async cache => request.mode === 'navigate'
+    ? await cache.match(request, { ignoreVary: true, ignoreSearch: true }) || await cache.match(URLS[0], { ignoreVary: true })
+    : await cache.match(request, { ignoreVary: true })).then(cached => cached || fetch(request)))
 })
 `)
     },
@@ -43,4 +45,5 @@ self.addEventListener('fetch', event => {
 export default defineConfig({
   base: process.env.GITHUB_PAGES === 'true' ? '/crackcheck/' : '/',
   plugins: [offlineWorker()],
+  build: { rolldownOptions: { input: { main: 'index.html', business: 'business.html' } } },
 })
