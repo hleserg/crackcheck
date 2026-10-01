@@ -17,6 +17,7 @@ app.innerHTML = `
         <div id="wifi-explanation" class="wifi-note" hidden></div>
         <div class="analysis" id="analysis"><p class="empty" id="empty"></p><div id="result" hidden><div class="result-head"><div><span class="section-kicker" id="result-label"></span><h2 id="score"></h2></div><div class="score-index" id="score-index"></div></div><div class="meter" aria-hidden="true"><span id="meter-fill"></span></div><div class="guess-row"><div><span class="section-kicker" id="guesses-label"></span><p class="guesses" id="guesses"></p></div></div><p class="model" id="model"></p><p class="model" id="translit-note" hidden></p><p class="model" id="wifi-format" hidden></p><div class="divider"></div><h3 id="seen"></h3><ol class="patterns" id="patterns"></ol><div class="advice"><h3 id="suggestion"></h3><p id="advice-text"></p></div></div></div>
       </section>
+      <section class="story" aria-labelledby="story-title"><span class="section-kicker" id="story-kicker"></span><h2 id="story-title"></h2><p id="story-intro"></p><ol class="story-steps"><li id="story1"></li><li id="story2"></li><li id="story3"></li></ol><p class="story-outro" id="story-outro"></p></section>
       <section class="hibp-section"><div><span class="section-kicker">OPT-IN · HIBP</span><h2 id="hibp-title"></h2><p id="hibp-text"></p></div><div class="hibp-actions"><label class="network-switch"><input id="network-off" type="checkbox" checked /><span id="network-off-label"></span></label><button class="primary-button" id="hibp-button" type="button"></button><p id="hibp-status" role="status" aria-live="polite"></p></div></section>
       <section class="learn"><span class="section-kicker">CRACKCHECK / 01</span><h2 id="learn-title"></h2><div class="learn-grid"><p id="learn1"></p><p id="learn2"></p><p id="learn3"></p></div></section>
     </main><footer><span>CrackCheck · MIT</span><nav><a id="privacy-link" href="https://github.com/hleserg/crackcheck/blob/main/docs/privacy.md"></a><a id="methodology-link" href="https://github.com/hleserg/crackcheck/blob/main/docs/methodology.md"></a><a id="data-link" href="https://github.com/hleserg/crackcheck/blob/main/THIRD_PARTY_LICENSES.md"></a></nav></footer>
@@ -46,6 +47,7 @@ function render() {
     'wifi-explanation': t.wifiText, empty: t.empty, 'result-label': t.result, 'guesses-label': t.guesses,
     model: t.model, seen: t.seen, suggestion: t.suggestion, 'advice-text': t.advice,
     'hibp-title': t.hibpTitle, 'hibp-text': t.hibpText, 'hibp-button': t.hibpButton, 'network-off-label': t.networkOff,
+    'story-kicker': t.storyKicker, 'story-title': t.storyTitle, 'story-intro': t.storyIntro, story1: t.story1, story2: t.story2, story3: t.story3, 'story-outro': t.storyOutro,
     'learn-title': t.learnTitle, learn1: t.learn1, learn2: t.learn2, learn3: t.learn3,
     'privacy-link': t.privacyLink, 'methodology-link': t.methodology, 'data-link': t.dataNotices,
   }
