@@ -15,6 +15,7 @@ Not released yet. This file will record user-visible changes beginning with the 
 - Fix the password panel being cut off on the right on phones.
 - Show a new version of the site on the next load instead of serving the cached page first.
 - Open in Wi‑Fi mode, and show the site crack time both without and with brute-force protection.
+- Explain in the FAQ why a leak of hashed passwords still matters and what hash databases are.
 - Add a short plan for people who reuse a few passwords everywhere: built-in password manager, email first, then accounts with money, reset the rest on next sign-in.
 - Answer common doubts in plain words: what if the manager is hacked or hands passwords to the authorities, a lost phone or forgotten main password, a paper notebook, "who would want me", sign-in codes, a phone in someone else's hands.
 - Open in Russian by default, whatever the browser language; English is one click away.

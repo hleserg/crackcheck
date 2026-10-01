@@ -4,6 +4,10 @@ import { checkPwnedPassword } from './hibp'
 import { strings, type Locale } from './i18n'
 import { people, renderChapter } from './threats'
 
+// Sources for the attack speeds quoted on the page.
+const link = (href: string, text: string) => `<a href="${href}" target="_blank" rel="noreferrer">${text}</a>`
+const zxcvbnRates = link('https://github.com/zxcvbn-ts/zxcvbn/blob/master/packages/libraries/main/src/TimeEstimates.ts', 'zxcvbn-ts')
+const hashcat4090 = link('https://gist.github.com/Chick3nman/32e662a5bb63bc4f51b847bb422222fd', 'hashcat, RTX 4090')
 const app = document.querySelector<HTMLDivElement>('#app')!
 app.innerHTML = `
   <div class="shell">
@@ -16,11 +20,11 @@ app.innerHTML = `
           <div class="privacy-note"><p id="privacy"></p><ul><li id="privacy-similar"></li><li id="privacy-offline"></li></ul></div><div class="mode-row"><span id="mode-label"></span><div class="segmented" id="scenario" role="group"><button id="account" type="button" aria-pressed="false"></button><button id="wifi" type="button" aria-pressed="true"></button></div></div>
         </div>
         <div id="wifi-explanation" class="wifi-note" hidden></div>
-        <div class="analysis" id="analysis"><p class="empty" id="empty"></p><div id="result" hidden><div class="result-head"><div><span class="section-kicker" id="result-label"></span><h2 id="score"></h2></div><div class="score-index" id="score-index"></div></div><div class="meter" aria-hidden="true"><span id="meter-fill"></span></div><h3 id="time-title"></h3><dl class="times"><div class="account-time"><dt id="time-open-label"></dt><dd id="time-open"></dd></div><div class="account-time"><dt id="time-online-label"></dt><dd id="time-online"></dd></div><div><dt id="time-offline-label"></dt><dd id="time-offline"></dd></div></dl><p class="model" id="guesses"></p><p class="model" id="reuse"></p><p class="model" id="model"></p><p class="model" id="translit-note" hidden></p><p class="model" id="wifi-format" hidden></p><div class="divider"></div><h3 id="seen"></h3><ol class="patterns" id="patterns"></ol><div class="advice"><h3 id="suggestion"></h3><p id="advice-text"></p></div></div></div>
+        <div class="analysis" id="analysis"><p class="empty" id="empty"></p><div id="result" hidden><div class="result-head"><div><span class="section-kicker" id="result-label"></span><h2 id="score"></h2></div><div class="score-index" id="score-index"></div></div><div class="meter" aria-hidden="true"><span id="meter-fill"></span></div><h3 id="time-title"></h3><dl class="times"><div class="account-time"><dt id="time-open-label"></dt><dd id="time-open"></dd></div><div class="account-time"><dt id="time-online-label"></dt><dd id="time-online"></dd></div><div><dt id="time-offline-label"></dt><dd id="time-offline"></dd></div></dl><p class="model" id="guesses"></p><p class="model" id="reuse"></p><p class="model" id="model"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p><p class="model" id="translit-note" hidden></p><p class="model" id="wifi-format" hidden></p><div class="divider"></div><h3 id="seen"></h3><ol class="patterns" id="patterns"></ol><div class="advice"><h3 id="suggestion"></h3><p id="advice-text"></p></div></div></div>
       </section>
       <section class="story" aria-labelledby="story-title"><span class="section-kicker" id="story-kicker"></span><h2 id="story-title"></h2><p id="story-intro"></p><ol class="story-steps"><li id="story1"></li><li id="story2"></li><li id="story3"></li></ol><p class="story-outro" id="story-outro"></p></section>
       <section class="story" aria-labelledby="plan-title"><span class="section-kicker" id="plan-kicker"></span><h2 id="plan-title"></h2><p id="plan-intro"></p><ol class="story-steps"><li id="plan1"></li><li id="plan2"></li><li id="plan3"></li><li id="plan4"></li></ol><p class="story-outro" id="plan-outro"></p></section>
-      <section class="story faq" aria-labelledby="faq-title"><span class="section-kicker" id="faq-kicker"></span><h2 id="faq-title"></h2>${[1, 2, 3, 4, 5, 6, 7, 8].map(n => `<details><summary id="faq${n}q"></summary><p id="faq${n}a"></p></details>`).join('')}</section>
+      <section class="story faq" aria-labelledby="faq-title"><span class="section-kicker" id="faq-kicker"></span><h2 id="faq-title"></h2>${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<details><summary id="faq${n}q"></summary><p id="faq${n}a"></p>${n === 9 ? `<p><span class="sources-label"></span> ${hashcat4090}</p>` : ''}</details>`).join('')}</section>
       <section class="story" id="people"></section>
       <section class="hibp-section"><div><span class="section-kicker">OPT-IN · HIBP</span><h2 id="hibp-title"></h2><p id="hibp-text"></p></div><div class="hibp-actions"><label class="network-switch"><input id="network-off" type="checkbox" checked /><span id="network-off-label"></span></label><button class="primary-button" id="hibp-button" type="button"></button><p id="hibp-status" role="status" aria-live="polite"></p></div></section>
       <section class="learn"><span class="section-kicker">CRACKCHECK / 01</span><h2 id="learn-title"></h2><div class="learn-grid"><p id="learn1"></p><p id="learn2"></p><p id="learn3"></p></div></section>
@@ -67,7 +71,8 @@ function render() {
     'privacy-link': t.privacyLink, 'methodology-link': t.methodology, 'data-link': t.dataNotices,
   }
   for (const [id, value] of Object.entries(labels)) setText(id, value)
-  for (const n of [1, 2, 3, 4, 5, 6, 7, 8] as const) { setText(`faq${n}q`, t[`faq${n}q`]); setText(`faq${n}a`, t[`faq${n}a`]) }
+  for (const label of document.querySelectorAll('.sources-label')) label.textContent = t.sources
+  for (const n of [1, 2, 3, 4, 5, 6, 7, 8, 9] as const) { setText(`faq${n}q`, t[`faq${n}q`]); setText(`faq${n}a`, t[`faq${n}a`]) }
   setText('local', $<HTMLInputElement>('network-off').checked ? t.local : t.hibpReady)
   passwordInput.placeholder = t.placeholder
   $('show').setAttribute('aria-label', t.show)
@@ -94,12 +99,12 @@ function render() {
   // IEEE 802.11i: a WPA2-Personal passphrase is 8–63 printable ASCII characters.
   $('wifi-format').hidden = mode !== 'wifi' || /^[\x20-\x7e]{8,63}$/.test(passwordInput.value)
   setText('wifi-format', t.wifiFormat)
-  // Attempts per second: zxcvbn's unthrottled-online, throttled-online and fast-hash rates; ~1e6 for WPA2 on one high-end GPU.
+  // Attempts per second: zxcvbn-ts's unthrottled-online, throttled-online and fast-hash rates; 2.5e6 is hashcat's WPA2 speed on one RTX 4090.
   for (const row of document.querySelectorAll<HTMLElement>('.account-time')) row.hidden = mode === 'wifi'
   setText('time-open', duration(result.guesses / 10))
   setText('time-online', duration(result.guesses / (100 / 3600)))
   setText('time-offline-label', mode === 'wifi' ? t.timeWifi : t.timeOffline)
-  setText('time-offline', duration(result.guesses / (mode === 'wifi' ? 1e6 : 1e10)))
+  setText('time-offline', duration(result.guesses / (mode === 'wifi' ? 2.5e6 : 1e10)))
   setText('guesses', t.guesses.replace('{n}', new Intl.NumberFormat(locale).format(Math.round(result.guesses))))
   setText('advice-text', t.advice[result.score >= 3 ? 1 : 0])
   const list = $('patterns')
