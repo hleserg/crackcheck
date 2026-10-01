@@ -25,7 +25,7 @@ app.innerHTML = `
       <section class="generator" id="generator" aria-labelledby="gen-title"><span class="section-kicker" id="gen-kicker"></span><h2 id="gen-title"></h2><p id="gen-intro"></p>
         <div class="gen-box"><div><label class="gen-length" for="gen-length"><span id="gen-length-label"></span><output id="gen-length-value" for="gen-length"></output></label><input id="gen-length" type="range" min="8" max="40" value="16" /><label class="network-switch"><input id="gen-digits" type="checkbox" checked /><span id="gen-digits-label"></span></label><label class="network-switch"><input id="gen-symbols" type="checkbox" checked /><span id="gen-symbols-label"></span></label></div>
           <div><output class="gen-password" id="gen-password"></output><div class="gen-buttons"><button class="small-button" id="gen-new" type="button"></button><button class="small-button" id="gen-copy" type="button"></button></div><p class="model" id="gen-status" role="status" aria-live="polite"></p></div></div>
-        <h3 id="gen-compare"></h3><dl class="times gen-times">${[0, 1, 2, 3].map(n => `<div id="gen-set${n}"><dt></dt><dd></dd></div>`).join('')}</dl><p class="model" id="gen-note"></p><p class="model" id="gen-rate"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p></section>
+        <h3 id="gen-compare"></h3><dl class="times gen-times"><div class="gen-account"><dt id="gen-time-open-label"></dt><dd id="gen-time-open"></dd></div><div class="gen-account"><dt id="gen-time-online-label"></dt><dd id="gen-time-online"></dd></div><div><dt id="gen-time-offline-label"></dt><dd id="gen-time-offline"></dd></div></dl><p class="model" id="gen-rate"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p></section>
       <section class="story" aria-labelledby="story-title"><span class="section-kicker" id="story-kicker"></span><h2 id="story-title"></h2><p id="story-intro"></p><ol class="story-steps"><li id="story1"></li><li id="story2"></li><li id="story3"></li></ol><p class="story-outro" id="story-outro"></p></section>
       <section class="story" aria-labelledby="plan-title"><span class="section-kicker" id="plan-kicker"></span><h2 id="plan-title"></h2><p id="plan-intro"></p><ol class="story-steps"><li id="plan1"></li><li id="plan2"></li><li id="plan3"></li><li id="plan4"></li></ol><p class="story-outro" id="plan-outro"></p></section>
       <section class="story faq" aria-labelledby="faq-title"><span class="section-kicker" id="faq-kicker"></span><h2 id="faq-title"></h2>${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<details><summary id="faq${n}q"></summary><p id="faq${n}a"></p>${n === 9 ? `<p><span class="sources-label"></span> ${hashcat4090}</p>` : ''}</details>`).join('')}</section>
@@ -55,7 +55,6 @@ function duration(seconds: number) {
 }
 // Letters are always in; the symbols are printable ASCII that routers accept in a WPA2 passphrase.
 const charsets = { letters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', digits: '0123456789', symbols: '!#$%&*+-=?@^_' }
-const setChoices = [[false, false], [true, false], [false, true], [true, true]] as const
 let generated = ''
 function randomIndex(size: number) {
   // Rejection sampling: values past the last whole multiple of size would favour the low indices.
@@ -82,14 +81,12 @@ function renderGenerator() {
   setText('gen-length-value', String(length))
   setText('gen-password', generated)
   // A random password is guessed by trying every combination; on average half of them are needed.
-  const rate = mode === 'wifi' ? 2.5e6 : 1e10
-  setChoices.forEach(([withDigits, withSymbols], n) => {
-    const size = charsets.letters.length + (withDigits ? charsets.digits.length : 0) + (withSymbols ? charsets.symbols.length : 0)
-    const row = $(`gen-set${n}`)
-    row.querySelector('dt')!.textContent = t.genSets[n]!.replace('{n}', String(size))
-    row.querySelector('dd')!.textContent = duration(size ** length / 2 / rate)
-    row.classList.toggle('current', withDigits === digits && withSymbols === symbols)
-  })
+  const combos = (charsets.letters.length + (digits ? charsets.digits.length : 0) + (symbols ? charsets.symbols.length : 0)) ** length / 2
+  for (const row of document.querySelectorAll<HTMLElement>('.gen-account')) row.hidden = mode === 'wifi'
+  setText('gen-time-open', duration(combos / 10))
+  setText('gen-time-online', duration(combos / (100 / 3600)))
+  setText('gen-time-offline-label', mode === 'wifi' ? t.timeWifi : t.timeOffline)
+  setText('gen-time-offline', duration(combos / (mode === 'wifi' ? 2.5e6 : 1e10)))
   setText('gen-rate', mode === 'wifi' ? t.genRateWifi : t.genRateLeak)
 }
 function invalidateHibp() {
@@ -106,13 +103,13 @@ function render() {
   const labels: Record<string, string> = {
     eyebrow: t.eyebrow, title: t.title, subtitle: t.subtitle, 'password-label': t.password,
     local: t.local, privacy: t.privacy, 'privacy-similar': t.privacySimilar, 'privacy-offline': t.privacyOffline, 'mode-label': t.mode, account: t.account, wifi: t.wifi,
-    'wifi-explanation': t.wifiText, empty: t.empty, 'result-label': t.result, 'time-title': t.timeTitle, 'time-open-label': t.timeOpen, 'time-online-label': t.timeOnline, reuse: t.reuse,
+    'wifi-explanation': t.wifiText, empty: t.empty, 'result-label': t.result, 'time-title': t.timeTitle, 'time-open-label': t.timeOpen, 'gen-time-open-label': t.timeOpen, 'gen-time-online-label': t.timeOnline, 'time-online-label': t.timeOnline, reuse: t.reuse,
     model: t.model, seen: t.seen, suggestion: t.suggestion,
     'hibp-kicker': t.hibpKicker, 'hibp-title': t.hibpTitle, 'hibp-text': t.hibpText, 'hibp-how': t.hibpHow, 'hibp-button': t.hibpButton, 'network-off-label': t.networkOff,
     'story-kicker': t.storyKicker, 'story-title': t.storyTitle, 'story-intro': t.storyIntro, story1: t.story1, story2: t.story2, story3: t.story3, 'story-outro': t.storyOutro,
     'plan-kicker': t.planKicker, 'plan-title': t.planTitle, 'plan-intro': t.planIntro, plan1: t.plan1, plan2: t.plan2, plan3: t.plan3, plan4: t.plan4, 'plan-outro': t.planOutro, 'faq-kicker': t.faqKicker, 'faq-title': t.faqTitle,
     'gen-kicker': t.genKicker, 'gen-title': t.genTitle, 'gen-intro': t.genIntro, 'gen-length-label': t.genLength, 'gen-digits-label': t.genDigits, 'gen-symbols-label': t.genSymbols,
-    'gen-new': t.genNew, 'gen-copy': t.genCopy, 'gen-compare': t.genCompare, 'gen-note': t.genNote,
+    'gen-new': t.genNew, 'gen-copy': t.genCopy, 'gen-compare': t.genCompare,
     'learn-title': t.learnTitle, learn1: t.learn1, learn2: t.learn2, learn3: t.learn3,
     'privacy-link': t.privacyLink, 'methodology-link': t.methodology, 'data-link': t.dataNotices,
   }

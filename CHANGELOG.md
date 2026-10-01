@@ -23,6 +23,7 @@ Not released yet. This file will record user-visible changes beginning with the 
 - Explain the result in plain words: how long guessing takes when a site limits attempts and when its password database leaks (in Wi‑Fi mode, a captured handshake on one GPU), why no honest probability exists, what each part of the password means and its frequency rank, and advice that depends on the score.
 - Add a group on handing access to contractors safely (no passwords in email or group chats, shared vault, personal accounts, revoke afterwards).
 - Retitle the main page and the breach check around "already cracked?", and warn in bold that a clean result covers public databases only.
+- Generator shows crack times for the generated password itself; the checkboxes only change how it is generated.
 - Explain the optional breach check in plain words: what the service is, what happens on click and what leaves the device.
 - Add a collapsed chapter on attacks on companies and sole traders to the main page, including why the IT contractor who built the site can be the weakest point and why a one-off check by a separate security specialist is worth paying for.
 - FAQ: in Yandex Browser, passwords are end-to-end encrypted only after you create a master password.
