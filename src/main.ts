@@ -27,6 +27,16 @@ app.innerHTML = `
         <div class="gen-box"><div><label class="gen-length" for="gen-length"><span id="gen-length-label"></span><output id="gen-length-value" for="gen-length"></output></label><input id="gen-length" type="range" min="8" max="40" value="16" /><label class="network-switch"><input id="gen-digits" type="checkbox" checked /><span id="gen-digits-label"></span></label><label class="network-switch"><input id="gen-symbols" type="checkbox" checked /><span id="gen-symbols-label"></span></label></div>
           <div><output class="gen-password" id="gen-password"></output><div class="gen-buttons"><button class="small-button" id="gen-new" type="button"></button><button class="small-button" id="gen-copy" type="button"></button></div><p class="model" id="gen-status" role="status" aria-live="polite"></p></div></div>
         <h3 id="gen-compare"></h3><dl class="times gen-times"><div><dt id="gen-time-offline-label"></dt><dd id="gen-time-offline"></dd></div><div class="gen-account"><dt id="gen-time-bare-label"></dt><dd id="gen-time-bare"></dd></div><div class="gen-account"><dt id="gen-time-open-label"></dt><dd id="gen-time-open"></dd></div><div class="gen-account"><dt id="gen-time-online-label"></dt><dd id="gen-time-online"></dd></div></dl><p class="model" id="gen-rate"></p><p class="model"><span class="sources-label"></span> ${zxcvbnRates}, ${hashcat4090}</p></section>
+      <article class="story wifi-guide" id="wifi-guide" aria-labelledby="wifi-guide-title">
+        <span class="section-kicker" id="wifi-guide-kicker"></span><h2 id="wifi-guide-title"></h2><p id="wifi-guide-intro"></p>
+        <h3 id="wifi-range-title"></h3><p id="wifi-range-text"></p><p id="wifi-tools-text"></p>
+        <h3 id="wifi-access-title"></h3><p id="wifi-access-text"></p><p id="wifi-presence-text"></p><p class="wifi-guide-caveat" id="wifi-limits-text"></p>
+        <h3 id="wifi-default-title"></h3><p id="wifi-default-text"></p>
+        <h3 id="wifi-guests-title"></h3><p id="wifi-guests-text"></p>
+        <h3 id="wifi-save-title"></h3><p id="wifi-save-text"></p>
+        <h3 id="wifi-steps-title"></h3><ol class="story-steps"><li id="wifi-step1"></li><li id="wifi-step2"></li><li id="wifi-step3"></li></ol>
+        <p class="wifi-guide-sources"><span id="wifi-sources-label"></span> ${link('https://consumer.ftc.gov/articles/how-secure-your-home-wi-fi-network', 'FTC')}, ${link('https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-153.pdf', 'NIST')}, ${link('https://consumer.ftc.gov/articles/how-secure-your-home-security-cameras', 'FTC cameras')}, ${link('https://bitwarden.com/help/bitwarden-glossary/', 'Bitwarden')}, ${link('https://github.com/justcallmekoko/ESP32Marauder', 'ESP32 Marauder')}, ${link('https://www.ncsc.gov.uk/report/impact-of-ai-on-cyber-threat', 'NCSC')}.</p>
+      </article>
       <section class="learn"><span class="section-kicker" id="learn-kicker"></span><h2 id="learn-title"></h2><div class="learn-grid"><p id="learn1"></p><p id="learn2"></p><p id="learn3"></p></div></section>
       <section class="story" aria-labelledby="story-title"><span class="section-kicker" id="story-kicker"></span><h2 id="story-title"></h2><p id="story-intro"></p><ol class="story-steps"><li id="story1"></li><li id="story2"></li><li id="story3"></li></ol><p class="story-outro" id="story-outro"></p></section>
       <section class="story" aria-labelledby="plan-title"><span class="section-kicker" id="plan-kicker"></span><h2 id="plan-title"></h2><p id="plan-intro"></p><ol class="story-steps"><li id="plan1"></li><li id="plan2"></li><li id="plan3"></li><li id="plan4"></li></ol><p class="story-outro" id="plan-outro"></p></section>
@@ -112,6 +122,14 @@ function render() {
     'plan-kicker': t.planKicker, 'plan-title': t.planTitle, 'plan-intro': t.planIntro, plan1: t.plan1, plan2: t.plan2, plan3: t.plan3, plan4: t.plan4, 'plan-outro': t.planOutro, 'faq-kicker': t.faqKicker, 'faq-title': t.faqTitle,
     'gen-kicker': t.genKicker, 'gen-title': t.genTitle, 'gen-intro': t.genIntro, 'gen-length-label': t.genLength, 'gen-digits-label': t.genDigits, 'gen-symbols-label': t.genSymbols,
     'gen-new': t.genNew, 'gen-copy': t.genCopy, 'gen-compare': t.genCompare,
+    'wifi-guide-kicker': t.wifiGuide.kicker, 'wifi-guide-title': t.wifiGuide.title, 'wifi-guide-intro': t.wifiGuide.intro,
+    'wifi-range-title': t.wifiGuide.rangeTitle, 'wifi-range-text': t.wifiGuide.range, 'wifi-tools-text': t.wifiGuide.tools,
+    'wifi-access-title': t.wifiGuide.accessTitle, 'wifi-access-text': t.wifiGuide.access, 'wifi-presence-text': t.wifiGuide.presence, 'wifi-limits-text': t.wifiGuide.limits,
+    'wifi-default-title': t.wifiGuide.defaultTitle, 'wifi-default-text': t.wifiGuide.default,
+    'wifi-guests-title': t.wifiGuide.guestsTitle, 'wifi-guests-text': t.wifiGuide.guests,
+    'wifi-save-title': t.wifiGuide.saveTitle, 'wifi-save-text': t.wifiGuide.save,
+    'wifi-steps-title': t.wifiGuide.stepsTitle, 'wifi-step1': t.wifiGuide.step1, 'wifi-step2': t.wifiGuide.step2, 'wifi-step3': t.wifiGuide.step3,
+    'wifi-sources-label': t.wifiGuide.sources,
     'learn-kicker': t.learnKicker, 'learn-title': t.learnTitle, learn1: t.learn1, learn2: t.learn2, learn3: t.learn3,
     'privacy-link': t.privacyLink, 'methodology-link': t.methodology, 'data-link': t.dataNotices,
   }
