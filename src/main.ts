@@ -30,7 +30,7 @@ app.innerHTML = `
       <article class="story wifi-guide" id="wifi-guide" aria-labelledby="wifi-guide-title">
         <span class="section-kicker" id="wifi-guide-kicker"></span><h2 id="wifi-guide-title"></h2><p id="wifi-guide-intro"></p>
         <h3 id="wifi-range-title"></h3><p id="wifi-range-text"></p><p id="wifi-tools-text"></p>
-        <h3 id="wifi-access-title"></h3><p id="wifi-access-text"></p><p id="wifi-presence-text"></p><p class="wifi-guide-caveat" id="wifi-limits-text"></p>
+        <h3 id="wifi-access-title"></h3><p id="wifi-access-text"></p><p id="wifi-presence-text"></p>
         <h3 id="wifi-default-title"></h3><p id="wifi-default-text"></p>
         <h3 id="wifi-guests-title"></h3><p id="wifi-guests-text"></p>
         <h3 id="wifi-save-title"></h3><p id="wifi-save-text"></p>
@@ -124,7 +124,7 @@ function render() {
     'gen-new': t.genNew, 'gen-copy': t.genCopy, 'gen-compare': t.genCompare,
     'wifi-guide-kicker': t.wifiGuide.kicker, 'wifi-guide-title': t.wifiGuide.title, 'wifi-guide-intro': t.wifiGuide.intro,
     'wifi-range-title': t.wifiGuide.rangeTitle, 'wifi-range-text': t.wifiGuide.range, 'wifi-tools-text': t.wifiGuide.tools,
-    'wifi-access-title': t.wifiGuide.accessTitle, 'wifi-access-text': t.wifiGuide.access, 'wifi-presence-text': t.wifiGuide.presence, 'wifi-limits-text': t.wifiGuide.limits,
+    'wifi-access-title': t.wifiGuide.accessTitle, 'wifi-access-text': t.wifiGuide.access, 'wifi-presence-text': t.wifiGuide.presence,
     'wifi-default-title': t.wifiGuide.defaultTitle, 'wifi-default-text': t.wifiGuide.default,
     'wifi-guests-title': t.wifiGuide.guestsTitle, 'wifi-guests-text': t.wifiGuide.guests,
     'wifi-save-title': t.wifiGuide.saveTitle, 'wifi-save-text': t.wifiGuide.save,
